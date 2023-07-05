@@ -1,7 +1,10 @@
 package net.zanckor.questapi.api.screenmanager;
 
+import net.zanckor.questapi.CommonMain;
+
 import java.util.HashMap;
 
+import static net.zanckor.questapi.CommonMain.Constants.LOG;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 
 public class ScreenRegistry {
@@ -28,7 +31,7 @@ public class ScreenRegistry {
             return abstractDialog;
         }
 
-        errorMessage(identifier);
+        errorMessage("on DialogScreen " + identifier);
         return dialog.get(MOD_ID);
     }
 
@@ -47,7 +50,7 @@ public class ScreenRegistry {
             return trackedScreen;
         }
 
-        errorMessage(identifier);
+        errorMessage("on QuestTracked " + identifier);
         return tracked_screen.get(MOD_ID);
     }
 
@@ -66,12 +69,12 @@ public class ScreenRegistry {
             return questLogScreen;
         }
 
-        errorMessage(identifier);
-        return quest_log_screen.get(QuestApiMain.MOD_ID);
+        errorMessage("on QuestLog " + identifier);
+        return quest_log_screen.get(MOD_ID);
     }
 
 
     private static void errorMessage(String identifier) {
-        QuestApiMain.LOGGER.error("Your identifier " + identifier + " is incorrect or you have no screen registered");
+        LOG.error("Your identifier " + identifier + " is incorrect or you have no screen registered");
     }
 }

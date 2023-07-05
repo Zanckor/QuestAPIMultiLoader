@@ -13,7 +13,6 @@ import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.common.network.SendQuestPacket;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,34 +84,6 @@ public class Util {
         }
 
         return slots;
-    }
-
-    public static void addQuest(Player player, String questID) throws IOException {
-        String quest = questID + ".json";
-        Path userFolder = Paths.get(playerData.toString(), player.getUUID().toString());
-
-        if (hasQuest(quest, userFolder)) {
-            for (File file : serverQuests.toFile().listFiles()) {
-                if (!(file.getName().equals(quest))) continue;
-                Path path = Paths.get(getActiveQuest(userFolder).toString(), File.separator, file.getName());
-                ServerQuest serverQuest = (ServerQuest) GsonManager.getJsonClass(file, ServerQuest.class);
-
-                //Checks if player has all requirements
-                for (int requirementIndex = 0; requirementIndex < serverQuest.getRequirements().size(); requirementIndex++) {
-                    Enum questRequirementEnum = EnumRegistry.getEnum(serverQuest.getRequirements().get(requirementIndex).getType(), EnumRegistry.getQuestRequirement());
-                    AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
-
-                    if (!requirement.handler(player, serverQuest, requirementIndex)) {
-                        return;
-                    }
-                }
-
-                createQuest(serverQuest, player, path);
-                QuestDialogManager.registerQuestByID(questID, path);
-                SendQuestPacket.TO_CLIENT(player, new ActiveQuestList(player.getUUID()));
-                return;
-            }
-        }
     }
 
     public static int createQuest(ServerQuest serverQuest, Player player, Path path) throws IOException {

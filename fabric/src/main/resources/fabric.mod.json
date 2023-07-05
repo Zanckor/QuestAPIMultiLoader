@@ -16,7 +16,7 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "net.zanckor.questapi.QuestAPI"
+            "net.zanckor.questapi.FabricQuestAPI"
         ]
     },
     "mixins": [

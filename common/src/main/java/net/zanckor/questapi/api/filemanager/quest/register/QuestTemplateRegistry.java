@@ -101,6 +101,6 @@ public class QuestTemplateRegistry {
     }
 
     public static AbstractTargetType getTranslatableTargetType(Enum key) {
-        return target_type.getOrDefault(key, new DefaultTargetType());
+        return target_type.getOrDefault(key, null);
     }
 }
