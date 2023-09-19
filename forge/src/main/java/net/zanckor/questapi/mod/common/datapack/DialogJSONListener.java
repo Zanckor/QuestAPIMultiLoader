@@ -8,8 +8,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.zanckor.questapi.CommonMain;
 import net.zanckor.questapi.commonutil.GsonManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -25,18 +25,18 @@ public class DialogJSONListener extends SimpleJsonResourceReloadListener {
     }
 
     public static void register(AddReloadListenerEvent e) {
-        e.addListener(new DialogJSONListener(GsonManager.gson, "assets/questapi/dialog"));
+        e.addListener(new DialogJSONListener(GsonManager.gson, "questapi/dialog"));
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         LOG.info("Loaded dialog datapack");
 
         jsonElementMap.forEach((rl, jsonElement) -> {
             JsonObject obj = jsonElement.getAsJsonObject();
 
             //Load dialog
-            if(obj.get("dialog") != null){
+            if (obj.get("dialog") != null) {
                 String dialogID = "." + rl.getPath();
                 Path path = Path.of(rl.getNamespace() + dialogID + ".json");
 

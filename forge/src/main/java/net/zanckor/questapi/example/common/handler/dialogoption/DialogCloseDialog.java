@@ -7,9 +7,9 @@ import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.CloseDialog;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.CloseDialog;
 
 import java.io.IOException;
 
@@ -24,16 +24,19 @@ public class DialogCloseDialog extends AbstractDialogOption {
      * @throws IOException Exception fired when server cannot read json file
      */
 
+
     @Override
     public void handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
 
+        // Close the dialog
         if (option.getType().equals(EnumDialogOption.CLOSE_DIALOG.toString())) {
             SendQuestPacket.TO_CLIENT(player, new CloseDialog());
         }
     }
 
+    //Since the dialog is closed once the player clicks on this option, both methods call the first one. We don't need RL or Item
     @Override
     public void handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
         handler(player, dialog, option_id, (Entity) null);

@@ -6,7 +6,7 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 public interface IEnumQuestGoal {
     AbstractGoal getQuest();
 
-    default void registerEnumGoal(Class enumClass) {
+    default void registerEnumGoal(Class<?> enumClass) {
         EnumRegistry.registerQuestGoal(enumClass);
     }
 }

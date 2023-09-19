@@ -9,26 +9,35 @@ base {
 }
 minecraft {
     version(minecraft_version)
-    if(file("src/main/resources/${mod_id}.accesswidener").exists()){
+    if (file("src/main/resources/${mod_id}.accesswidener").exists()) {
         accessWideners(file("src/main/resources/${mod_id}.accesswidener"))
     }
 }
 
 dependencies {
-    compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
-     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
+            artifactId = 'common'
             from components.java
         }
     }
+
     repositories {
         maven {
-            url "file://" + System.getenv("local_maven")
+            name = "cloudsmith"
+            url = "https://maven.cloudsmith.io/questapi/QuestAPI/"
+            def releasesRepoUrl = "https://maven.cloudsmith.io/questapi/QuestAPI_Forge/"
+            def snapshotsRepoUrl = "https://maven.cloudsmith.io/questapi/QuestAPI_Forge/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = 'enric-velasco'
+                password = '10591c9507cca378bac69c62507d42ae475dd4ff'
+            }
         }
     }
 }

@@ -4,16 +4,16 @@ import net.zanckor.questapi.api.filemanager.FileAbstract;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ReadDialog extends FileAbstract {
 
     /**
      * This class allows dev to add dialog to dialog-read.json or get which ones are already read
-     *
      * Returns a list of dialogs already read by a certain player
      */
 
 
-    public static class GlobalID extends FileAbstract  {
+    public static class GlobalID extends FileAbstract {
         String global_id;
         List<DialogID> dialog_id;
 
@@ -31,7 +31,7 @@ public class ReadDialog extends FileAbstract {
         }
     }
 
-    public static class DialogID extends FileAbstract  {
+    public static class DialogID extends FileAbstract {
         int dialog_id;
 
         public DialogID(int id) {

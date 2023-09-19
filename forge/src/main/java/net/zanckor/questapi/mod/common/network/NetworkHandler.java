@@ -1,16 +1,16 @@
 package net.zanckor.questapi.mod.common.network;
 
-import net.zanckor.questapi.mod.common.network.message.dialogoption.AddQuest;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.CloseDialog;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.DialogRequestPacket;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.DisplayDialog;
-import net.zanckor.questapi.mod.common.network.message.npcmarker.ValidNPCMarker;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.AddQuest;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.CloseDialog;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.DialogRequestPacket;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
+import net.zanckor.questapi.mod.common.network.packet.npcmarker.ValidNPCMarker;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.zanckor.questapi.mod.common.network.message.quest.*;
-import net.zanckor.questapi.mod.common.network.message.screen.*;
+import net.zanckor.questapi.mod.common.network.packet.quest.*;
+import net.zanckor.questapi.mod.common.network.packet.screen.*;
 
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 

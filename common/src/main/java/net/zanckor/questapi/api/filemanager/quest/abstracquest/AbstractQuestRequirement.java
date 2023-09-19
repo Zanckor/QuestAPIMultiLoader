@@ -12,7 +12,6 @@ public abstract class AbstractQuestRequirement {
      *
      * @param player           The player
      * @param questTemplate    ServerQuestBase with global quest data
-     * @param requirementIndex
      * @throws IOException Exception fired when server cannot read json file
      */
 

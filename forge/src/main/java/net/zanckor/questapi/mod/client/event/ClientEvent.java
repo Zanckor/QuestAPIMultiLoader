@@ -13,9 +13,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.zanckor.questapi.ForgeQuestAPI;
 import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.codec.EntityTypeTagDialog;
 import net.zanckor.questapi.api.screenmanager.AbstractQuestLog;
 import net.zanckor.questapi.api.screenmanager.ScreenRegistry;
@@ -31,13 +31,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
+import static net.zanckor.questapi.ForgeQuestAPI.ClientEventHandlerRegister.questMenu;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvent {
 
+
     @SubscribeEvent
     public static void keyOpenScreen(InputEvent.Key e) throws IOException {
-        if (ForgeQuestAPI.ClientEventHandlerRegister.questMenu.isDown()) {
+        if (questMenu != null && questMenu.isDown()) {
             AbstractQuestLog questLogScreen = ScreenRegistry.getQuestLogScreen(ScreenConfig.QUEST_LOG_SCREEN.get());
 
             Minecraft.getInstance().setScreen(questLogScreen.modifyScreen());
@@ -108,12 +111,11 @@ public class ClientEvent {
 
                 EntityTypeTagDialog entityTypeDialog = GsonManager.gson.fromJson(value, EntityTypeTagDialog.class);
 
-                conditions:
                 for (EntityTypeTagDialog.EntityTypeTagDialogCondition conditions : entityTypeDialog.getConditions()) {
                     boolean tagCompare;
 
                     switch (conditions.getLogic_gate()) {
-                        case OR: {
+                        case OR -> {
                             for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
                                 if (entityNBT.get(nbt.getTag()) == null) {
                                     continue;
@@ -124,10 +126,8 @@ public class ClientEvent {
                                 entity.getPersistentData().putBoolean("availableForDialog", tagCompare);
                                 if (tagCompare) return true;
                             }
-                            break;
                         }
-
-                        case AND: {
+                        case AND -> {
                             boolean shouldAddMarker = false;
 
                             for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
@@ -148,7 +148,6 @@ public class ClientEvent {
                                 return true;
                             }
 
-                            break;
                         }
                     }
                 }

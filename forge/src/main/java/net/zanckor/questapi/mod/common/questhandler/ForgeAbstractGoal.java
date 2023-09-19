@@ -13,9 +13,9 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Util;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.quest.ActiveQuestList;
-import net.zanckor.questapi.mod.common.network.message.quest.ToastPacket;
-import net.zanckor.questapi.mod.common.network.message.screen.UpdateQuestTracked;
+import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.common.network.packet.quest.ToastPacket;
+import net.zanckor.questapi.mod.common.network.packet.screen.UpdateQuestTracked;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,17 +23,17 @@ import java.io.IOException;
 import static net.zanckor.questapi.CommonMain.serverQuests;
 
 
-public abstract class ForgeAbstractGoal extends AbstractGoal{
+@SuppressWarnings("ConstantConditions, rawtypes")
+public abstract class ForgeAbstractGoal extends AbstractGoal {
 
-
-    public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
+    public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum<?> questType) throws IOException {
+        userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
         SendQuestPacket.TO_CLIENT(player, new UpdateQuestTracked(userQuest));
 
-        if (Util.isQuestCompleted(userQuest)) completeQuest(player, file);
+        if (Util.isQuestCompleted(userQuest)) completeQuest(player, userQuest, file);
     }
 
-    protected void completeQuest(ServerPlayer player, File file) throws IOException {
-        UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
+    protected void completeQuest(ServerPlayer player, UserQuest userQuest, File file) throws IOException {
         if (userQuest == null) return;
 
         //Update file and load it again
@@ -67,10 +67,10 @@ public abstract class ForgeAbstractGoal extends AbstractGoal{
         String questID = userQuest.getId() + ".json";
 
         for (File serverFile : serverQuests.toFile().listFiles()) {
-            if (!(serverFile.getName().equals(questID))) continue;
+            if (!(serverFile.getName().contains(questID))) continue;
             ServerQuest serverQuest = (ServerQuest) GsonManager.getJsonClass(serverFile, ServerQuest.class);
 
-            if(serverQuest.getRewards() == null) return;
+            if (serverQuest.getRewards() == null) return;
 
             for (int rewardIndex = 0; rewardIndex < serverQuest.getRewards().size(); rewardIndex++) {
                 Enum rewardEnum = EnumRegistry.getEnum(serverQuest.getRewards().get(rewardIndex).getType(), EnumRegistry.getQuestReward());

@@ -13,8 +13,6 @@ public abstract class AbstractReward {
      *
      * @param player        The player
      * @param questTemplate ServerQuestBase with global quest data
-     * @param rewardIndex
-     * @throws IOException
      */
 
     public abstract void handler(ServerPlayer player, ServerQuest questTemplate, int rewardIndex) throws IOException;

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
 
+@SuppressWarnings("unused")
 public class SendQuestPacket {
 
     public static void NEAR(Player player, Object packet, double radius) {

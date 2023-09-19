@@ -7,9 +7,9 @@ import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.DisplayDialog;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
 
 import java.io.IOException;
 
@@ -23,6 +23,7 @@ public class DialogOpenDialog extends AbstractDialogOption {
      * @param option_id DialogOption ID, Returns the object inside the List DialogOption. This is not a parameter inside the .json file
      * @throws IOException Exception fired when server cannot read json file
      */
+
 
     @Override
     public void handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {

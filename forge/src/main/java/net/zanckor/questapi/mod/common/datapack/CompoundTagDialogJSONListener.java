@@ -8,8 +8,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.zanckor.questapi.CommonMain;
 import net.zanckor.questapi.commonutil.GsonManager;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -25,19 +25,16 @@ public class CompoundTagDialogJSONListener extends SimpleJsonResourceReloadListe
     }
 
     public static void register(AddReloadListenerEvent e) {
-        e.addListener(new CompoundTagDialogJSONListener(GsonManager.gson, "assets/questapi/npc/compound_tag_list"));
+        e.addListener(new CompoundTagDialogJSONListener(GsonManager.gson, "questapi/npc/compound_tag_list"));
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         LOG.info("Loaded list of dialogs loaded via entity type datapack");
 
         jsonElementMap.forEach((rl, jsonElement) -> {
             JsonObject obj = jsonElement.getAsJsonObject();
-            if (obj.get("id") == null) return;
-
-            //Load quest
-            if(obj.get("entity_type") != null) {
+            if (obj.get("id") != null && obj.get("entity_type") != null) {
                 String questId = "." + obj.get("id").toString().substring(1, obj.get("id").toString().length() - 1);
                 Path path = Path.of(rl.getNamespace() + questId + ".json");
 

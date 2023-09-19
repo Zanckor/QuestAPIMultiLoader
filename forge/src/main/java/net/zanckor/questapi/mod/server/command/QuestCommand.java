@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
@@ -18,9 +19,8 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.quest.ActiveQuestList;
-import net.zanckor.questapi.mod.common.network.message.screen.RemovedQuest;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.LoadQuest;
+import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.common.network.packet.screen.RemovedQuest;
 import net.zanckor.questapi.mod.server.startdialog.StartDialog;
 
 import java.io.File;
@@ -32,13 +32,8 @@ import java.util.UUID;
 
 import static net.zanckor.questapi.CommonMain.*;
 
+@SuppressWarnings("ConstantConditions")
 public class QuestCommand {
-    public static int reloadQuests(CommandContext<CommandSourceStack> context, String identifier) {
-        LoadQuest.registerQuest(context.getSource().getServer(), identifier);
-
-        return 1;
-    }
-
     public static int addQuest(CommandContext<CommandSourceStack> context, UUID playerUUID, String questID) throws IOException {
         ServerLevel level = context.getSource().getPlayer().serverLevel();
         Player player = level.getPlayerByUUID(playerUUID);
@@ -58,12 +53,18 @@ public class QuestCommand {
             ServerQuest serverQuest = (ServerQuest) GsonManager.getJsonClass(file, ServerQuest.class);
 
             //Checks if player has all requirements
-            for (int requirementIndex = 0; requirementIndex < serverQuest.getRequirements().size(); requirementIndex++) {
-                Enum questRequirementEnum = EnumRegistry.getEnum(serverQuest.getRequirements().get(requirementIndex).getType(), EnumRegistry.getQuestRequirement());
-                AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
+            if (serverQuest.getRequirements() != null) {
 
-                if (!requirement.handler(player, serverQuest, requirementIndex)) {
-                    return 0;
+                for (int requirementIndex = 0; requirementIndex < serverQuest.getRequirements().size(); requirementIndex++) {
+                    ServerRequirement serverRequirement = serverQuest.getRequirements().get(requirementIndex);
+                    String requirementType = serverRequirement.getType() != null ? serverRequirement.getType() : "NONE";
+                    Enum<?> questRequirementEnum = EnumRegistry.getEnum(requirementType, EnumRegistry.getDialogRequirement());
+
+                    AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
+
+                    if (!requirement.handler(player, serverQuest, requirementIndex)) {
+                        return 0;
+                    }
                 }
             }
 
@@ -73,10 +74,11 @@ public class QuestCommand {
             return 1;
         }
 
+
         return 0;
     }
 
-    public static int createQuest(ServerQuest serverQuest, Player player, Path path) throws IOException {
+    public static void createQuest(ServerQuest serverQuest, Player player, Path path) throws IOException {
         UserQuest userQuest = UserQuest.createQuest(serverQuest, path);
 
         if (userQuest.hasTimeLimit()) {
@@ -85,20 +87,21 @@ public class QuestCommand {
 
         GsonManager.writeJson(path.toFile(), userQuest);
 
-        return 1;
     }
 
     public static int removeQuest(CommandContext<CommandSourceStack> context, UUID playerUUID, String questID) throws IOException {
         ServerLevel level = context.getSource().getPlayer().serverLevel();
         Player player = level.getPlayerByUUID(playerUUID);
+
         Path path = QuestDialogManager.getQuestByID(questID);
+
         UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(path.toFile(), UserQuest.class);
 
         SendQuestPacket.TO_CLIENT(player, new RemovedQuest(userQuest.getId()));
 
         for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
             UserGoal questGoal = userQuest.getQuestGoals().get(indexGoals);
-            Enum goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
+            Enum<?> goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
 
             QuestDialogManager.removeQuest(questID, goalEnum);
         }

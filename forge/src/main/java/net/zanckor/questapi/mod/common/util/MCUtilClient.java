@@ -39,10 +39,11 @@ import static net.minecraft.client.gui.components.Button.OnPress;
 import static net.minecraft.client.gui.components.Button.builder;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 
+@SuppressWarnings("ConstantConditions, unused")
 @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class MCUtilClient {
     public static String properNoun(String text) {
-        if (text.isEmpty() || text.length() < 1) return text;
+        if (text.length() < 1) return text;
 
         return text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
     }
@@ -169,6 +170,7 @@ public class MCUtilClient {
 
     public static void renderLines(GuiGraphics graphics, PoseStack poseStack, float textIndent, int paragraphIndent, int textMaxLength, Component text, Font font) {
         float splitIndent = 0;
+        Style style = text.getStyle();
         List<List<FormattedCharSequence>> splintedText = splitText(String.valueOf(text), font, textMaxLength * 5);
 
         for (List<FormattedCharSequence> line : splintedText) {
@@ -219,8 +221,8 @@ public class MCUtilClient {
         poseStack.translate(width, height, 0);
         poseStack.scale(scale, scale, 1);
 
-        for (int i = 0; i < text.size(); i++) {
-            for (List<FormattedCharSequence> textBlock : MCUtilClient.splitText(text.get(i), font, 5 * textMaxLength)) {
+        for (String s : text) {
+            for (List<FormattedCharSequence> textBlock : MCUtilClient.splitText(s, font, 5 * textMaxLength)) {
                 for (FormattedCharSequence line : textBlock) {
                     if (splitIndent < 2) {
                         graphics.drawString(font, line, 0, (int) (textIndent * (splitIndent / 2)), 0, false);

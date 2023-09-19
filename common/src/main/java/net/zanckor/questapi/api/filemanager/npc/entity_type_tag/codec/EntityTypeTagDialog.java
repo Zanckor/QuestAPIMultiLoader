@@ -5,6 +5,7 @@ import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.gateenum.LogicGa
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class EntityTypeTagDialog extends FileAbstract {
     private String id;
     private List<String> entity_type;
@@ -17,7 +18,8 @@ public class EntityTypeTagDialog extends FileAbstract {
     public List<EntityTypeTagDialogCondition> getConditions() {
         return conditions;
     }
-    public class EntityTypeTagDialogCondition{
+
+    public class EntityTypeTagDialogCondition {
         private List<EntityTypeTagDialogNBT> nbt;
         private String logic_gate;
         private List<String> dialog_list;

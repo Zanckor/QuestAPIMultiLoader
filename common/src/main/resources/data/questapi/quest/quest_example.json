@@ -1,0 +1,36 @@
+{
+  "id": "quest_example",
+  "title": "Quest Example",
+  "hasTimeLimit": false,
+  "timeLimitInSeconds": 0,
+  "goals": [
+    {
+      "type": "COLLECT",
+      "target": "minecraft:iron_ingot",
+      "amount": 10
+    },
+    {
+      "type": "INTERACT_SPECIFIC_ENTITY",
+      "target": "minecraft:pig",
+      "amount": 1,
+      "additionalClassData": {
+        "CustomName": "Jeb"
+      }
+    }
+  ],
+  "rewards": [
+    {
+      "type": "ITEM",
+      "tag": "minecraft:iron_ingot",
+      "amount": 10
+    }
+  ],
+  "requirement": [
+    {
+      "type": "NONE",
+      "requirements_min": null,
+      "requirements_max": null
+    }
+  ],
+  "description": "Text example"
+}

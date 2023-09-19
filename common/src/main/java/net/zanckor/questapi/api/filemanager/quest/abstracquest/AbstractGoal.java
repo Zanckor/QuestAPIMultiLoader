@@ -3,7 +3,7 @@ package net.zanckor.questapi.api.filemanager.quest.abstracquest;
 import com.google.gson.Gson;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
@@ -17,19 +17,20 @@ import java.io.IOException;
 
 import static net.zanckor.questapi.CommonMain.serverQuests;
 
+@SuppressWarnings({"unused", "ConstantConditions"})
 public abstract class AbstractGoal {
 
     /**
      * Abstract class to call a registered quest type handler
      *
-     * @param player           The player
-     * @param questTemplate    ServerQuestBase with global quest data
-     * @param requirementIndex
+     * @param player The player
      * @throws IOException Exception fired when server cannot read json file
      */
 
-    public abstract void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException;
-    protected abstract void completeQuest(ServerPlayer player, File file) throws IOException;
+    public abstract void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum<?> questType) throws IOException;
+
+    protected abstract void completeQuest(ServerPlayer player, UserQuest userQuest, File file) throws IOException;
+
     public abstract void enhancedCompleteQuest(ServerPlayer player, File file, UserGoal userGoal) throws IOException;
 
     /**
@@ -46,7 +47,7 @@ public abstract class AbstractGoal {
             if (serverQuest.getRewards() == null) return;
 
             for (int rewardIndex = 0; rewardIndex < serverQuest.getRewards().size(); rewardIndex++) {
-                Enum rewardEnum = EnumRegistry.getEnum(serverQuest.getRewards().get(rewardIndex).getType(), EnumRegistry.getQuestReward());
+                Enum<?> rewardEnum = EnumRegistry.getEnum(serverQuest.getRewards().get(rewardIndex).getType(), EnumRegistry.getQuestReward());
                 AbstractReward reward = QuestTemplateRegistry.getQuestReward(rewardEnum);
 
                 reward.handler(player, serverQuest, rewardIndex);
@@ -67,5 +68,5 @@ public abstract class AbstractGoal {
     /**
      * This method returns what type of goal is your current goal class designed for. See CollectGoal.jar for an example.
      */
-    public abstract Enum getGoalType();
+    public abstract Enum<?> getGoalType();
 }

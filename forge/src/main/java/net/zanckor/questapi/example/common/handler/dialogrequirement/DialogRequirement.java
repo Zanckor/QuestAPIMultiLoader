@@ -7,10 +7,10 @@ import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogRequirement;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumdialog.EnumDialogReq;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumdialog.EnumDialogReqStatus;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogReq;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogReqStatus;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.DisplayDialog;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
 import net.zanckor.questapi.mod.common.util.MCUtil;
 
 import java.io.IOException;
@@ -27,17 +27,24 @@ public class DialogRequirement extends AbstractDialogRequirement {
      * @see EnumDialogReqStatus Requirement status
      */
 
+    
     @Override
     public boolean handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+        // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
-        String requirementType = requirement.getType();
+        String requirementType = requirement.getType() != null ? requirement.getType() : "NONE";
+
+        // Check if the requirement type is not a dialog requirement
         if (!(requirementType.equals(EnumDialogReq.DIALOG.toString()))) return false;
 
+        // Get the requirement status and dialog ID
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
         int dialog_requirement = requirement.getDialogId();
 
+        // Check the requirement status
         switch (requirementStatus) {
             case READ -> {
+                // If the dialog is read by the player and the requirement are READ, display the dialog
                 if (MCUtil.isReadDialog(player, dialog_requirement)) {
                     displayDialog(player, option_id, dialog, entity);
                     return true;
@@ -45,6 +52,7 @@ public class DialogRequirement extends AbstractDialogRequirement {
             }
 
             case NOT_READ -> {
+                // If the dialog is not read by the player and the requirement are NOT_READ, display the dialog
                 if (!MCUtil.isReadDialog(player, option_id)) {
                     displayDialog(player, option_id, dialog, entity);
                     return true;
@@ -57,15 +65,21 @@ public class DialogRequirement extends AbstractDialogRequirement {
 
     @Override
     public boolean handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
+        // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
         String requirementType = requirement.getType();
+
+        // Check if the requirement type is not a dialog requirement
         if (!(requirementType.equals(EnumDialogReq.DIALOG.toString()))) return false;
 
+        // Get the requirement status and dialog ID
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
         int dialog_requirement = requirement.getDialogId();
 
+        // Check the requirement status
         switch (requirementStatus) {
             case READ -> {
+                // If the dialog is read by the player and the requirement are READ, display the dialog
                 if (MCUtil.isReadDialog(player, dialog_requirement)) {
                     displayDialog(player, option_id, dialog, resourceLocation);
                     return true;
@@ -73,6 +87,7 @@ public class DialogRequirement extends AbstractDialogRequirement {
             }
 
             case NOT_READ -> {
+                // If the dialog is not read by the player and the requirement are NOT_READ, display the dialog
                 if (!MCUtil.isReadDialog(player, option_id)) {
                     displayDialog(player, option_id, dialog, resourceLocation);
                     return true;
@@ -85,15 +100,21 @@ public class DialogRequirement extends AbstractDialogRequirement {
 
     @Override
     public boolean handler(Player player, NPCConversation dialog, int option_id, Item item) throws IOException {
+        // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
         String requirementType = requirement.getType();
+
+        // Check if the requirement type is not a dialog requirement
         if (!(requirementType.equals(EnumDialogReq.DIALOG.toString()))) return false;
 
+        // Get the requirement status and dialog ID
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
         int dialog_requirement = requirement.getDialogId();
 
+        // Check the requirement status
         switch (requirementStatus) {
             case READ -> {
+                // If the dialog is read by the player and the requirement are READ, display the dialog
                 if (MCUtil.isReadDialog(player, dialog_requirement)) {
                     displayDialog(player, option_id, dialog, item);
                     return true;
@@ -101,6 +122,7 @@ public class DialogRequirement extends AbstractDialogRequirement {
             }
 
             case NOT_READ -> {
+                // If the dialog is not read by the player and the requirement are NOT_READ, display the dialog
                 if (!MCUtil.isReadDialog(player, option_id)) {
                     displayDialog(player, option_id, dialog, item);
                     return true;

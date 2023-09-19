@@ -21,8 +21,8 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.npcmarker.ValidNPCMarker;
-import net.zanckor.questapi.mod.common.network.message.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.common.network.packet.npcmarker.ValidNPCMarker;
+import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
 import net.zanckor.questapi.mod.common.util.MCUtil;
 import net.zanckor.questapi.mod.server.startdialog.StartDialog;
 
@@ -37,12 +37,9 @@ import static net.zanckor.questapi.CommonMain.*;
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 
+@SuppressWarnings("ConstantConditions")
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerEvent {
-
-    /*
-     * TODO: Add auto-save quest's timer so on logout it wont lose the quest, just will freeze the timer.
-     */
 
     @SubscribeEvent
     public static void questWithTimer(TickEvent.PlayerTickEvent e) throws IOException {
@@ -76,7 +73,7 @@ public class ServerEvent {
 
             for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
                 UserGoal questGoal = userQuest.getQuestGoals().get(indexGoals);
-                Enum goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
+                Enum<?> goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
 
                 MCUtil.moveFileToUncompletedFolder(uncompletedQuest, file, userQuest, goalEnum);
             }
@@ -96,7 +93,7 @@ public class ServerEvent {
 
             for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
                 UserGoal questGoal = userQuest.getQuestGoals().get(indexGoals);
-                Enum goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
+                Enum<?> goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
 
                 userQuest.setCompleted(true);
                 GsonManager.writeJson(file, userQuest);
@@ -128,7 +125,7 @@ public class ServerEvent {
 
                     for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
                         UserGoal questGoal = userQuest.getQuestGoals().get(indexGoals);
-                        Enum goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
+                        Enum<?> goalEnum = EnumRegistry.getEnum(questGoal.getType(), EnumRegistry.getQuestGoal());
 
                         QuestDialogManager.registerQuestTypeLocation(goalEnum, file.toPath().toAbsolutePath());
                     }
@@ -178,7 +175,8 @@ public class ServerEvent {
         String targetEntityType = EntityType.getKey(target.getType()).toString();
 
         List<String> dialogPerEntityType = QuestDialogManager.getDialogPerEntityType(targetEntityType);
-        if (!player.level().isClientSide && dialogPerEntityType != null && e.getHand().equals(InteractionHand.MAIN_HAND) && !openVanillaMenu(player)) {
+
+        if (!player.level().isClientSide && dialogPerEntityType != null && e.getHand().equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
             String selectedDialog = target.getPersistentData().getString("dialog");
 
             if (target.getPersistentData().get("dialog") == null) {
@@ -198,7 +196,7 @@ public class ServerEvent {
         Entity target = e.getTarget();
         List<String> dialogs = new ArrayList<>();
 
-        if (!player.level().isClientSide && e.getHand().equals(InteractionHand.MAIN_HAND) && !openVanillaMenu(player)) {
+        if (!player.level().isClientSide && e.getHand().equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
 
             for (Map.Entry<String, File> entry : QuestDialogManager.dialogPerCompoundTag.entrySet()) {
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(target);
@@ -210,7 +208,7 @@ public class ServerEvent {
                     boolean tagCompare;
 
                     switch (conditions.getLogic_gate()) {
-                        case OR: {
+                        case OR -> {
                             for (EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
                                 if (entityNBT.get(nbt.getTag()) == null) {
                                     tagCompare = false;
@@ -225,10 +223,8 @@ public class ServerEvent {
                                     continue conditions;
                                 }
                             }
-                            break;
                         }
-
-                        case AND: {
+                        case AND -> {
                             boolean shouldAddDialogList = false;
 
                             for (EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
@@ -248,7 +244,6 @@ public class ServerEvent {
                                 dialogs.addAll(conditions.getDialog_list());
                             }
 
-                            break;
                         }
                     }
                 }
@@ -257,12 +252,11 @@ public class ServerEvent {
             if (!dialogs.isEmpty()) {
                 e.setCanceled(true);
 
-
                 String selectedDialog = target.getPersistentData().getString("dialog");
 
                 if (target.getPersistentData().get("dialog") == null && !dialogs.isEmpty()) {
                     int selectedInteger = MCUtil.randomBetween(0, dialogs.size());
-                    selectedDialog = dialogs.get(selectedInteger).toString();
+                    selectedDialog = dialogs.get(selectedInteger);
 
                     target.getPersistentData().putString("dialog", selectedDialog);
                 }
@@ -276,9 +270,9 @@ public class ServerEvent {
     public static boolean openVanillaMenu(Player player) {
         if (player.isShiftKeyDown()) {
             player.setShiftKeyDown(false);
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 }

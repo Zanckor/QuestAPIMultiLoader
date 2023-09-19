@@ -13,15 +13,15 @@ import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 
 public class NpcRegistry {
     public static final DeferredRegister<EntityType<?>>
-            ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+            ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
 
-    public static final RegistryObject<EntityType<NPCEntity>> NPC_ENTITY = ENTITY_TYPES.register("quest_npc",
+    public static final RegistryObject<EntityType<NPCEntity>> NPC_ENTITY = ENTITIES.register("quest_npc",
             () -> EntityType.Builder.of(NPCEntity::new, MobCategory.AMBIENT)
                     .build(new ResourceLocation(MOD_ID, "quest_npc").toString()));
 
 
     public static void register(IEventBus eventBus) {
-        ENTITY_TYPES.register(eventBus);
+        ENTITIES.register(eventBus);
     }
 }

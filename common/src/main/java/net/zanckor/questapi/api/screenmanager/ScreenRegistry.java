@@ -1,7 +1,5 @@
 package net.zanckor.questapi.api.screenmanager;
 
-import net.zanckor.questapi.CommonMain;
-
 import java.util.HashMap;
 
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
@@ -12,9 +10,9 @@ public class ScreenRegistry {
      * This class has registries whichever screen you want to display to screens
      */
 
-    private static HashMap<String, AbstractDialog> dialog = new HashMap<>();
-    private static HashMap<String, AbstractQuestTracked> tracked_screen = new HashMap<>();
-    private static HashMap<String, AbstractQuestLog> quest_log_screen = new HashMap<>();
+    private static final HashMap<String, AbstractDialog> dialog = new HashMap<>();
+    private static final HashMap<String, AbstractQuestTracked> tracked_screen = new HashMap<>();
+    private static final HashMap<String, AbstractQuestLog> quest_log_screen = new HashMap<>();
 
 
     /**

@@ -2,6 +2,7 @@ package net.zanckor.questapi.api.filemanager.quest.codec.server;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ServerReward {
     private String type;
     private String tag;

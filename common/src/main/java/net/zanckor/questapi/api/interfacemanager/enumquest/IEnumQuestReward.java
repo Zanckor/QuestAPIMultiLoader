@@ -6,7 +6,7 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 public interface IEnumQuestReward {
     AbstractReward getReward();
 
-    default void registerEnumReward(Class enumClass) {
+    default void registerEnumReward(Class<?> enumClass) {
         EnumRegistry.registerQuestReward(enumClass);
     }
 }

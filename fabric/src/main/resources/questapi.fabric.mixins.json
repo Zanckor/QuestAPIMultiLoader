@@ -1,18 +1,25 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "net.zanckor.questapi.mixin",
-    "refmap": "${mod_id}.refmap.json",
-    "compatibilityLevel": "JAVA_17",
-    "mixins": [
-    ],
-    "client": [
-      "MixinTitleScreen"
-    ],
-    "server": [
-    ],
-    "injectors": {
-      "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.zanckor.questapi.multiloader.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinEntityDataSaver",
+    "MixinFurnaceResultSlot",
+    "MixinItem",
+    "MixinItemEntity",
+    "MixinPlayer",
+    "MixinPlayerList",
+    "MixinResultSlot"
+  ],
+  "client": [
+    "MixinLivingEntityRenderer"
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
   }
+}
   

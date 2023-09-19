@@ -15,7 +15,7 @@ import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 public class ClientModSetup {
 
     @SubscribeEvent
-    public static void registerOverlays(FMLClientSetupEvent e) {
+    public static void registerRenderer(FMLClientSetupEvent e) {
         EntityRenderers.register(NpcRegistry.NPC_ENTITY.get(), NPCRenderer::new);
     }
 }

@@ -3,10 +3,10 @@ package net.zanckor.questapi.api.filemanager.dialog.codec;
 import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.FileAbstract;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class NPCDialog extends FileAbstract {
 
 
@@ -31,7 +31,7 @@ public class NPCDialog extends FileAbstract {
         return dialog;
     }
 
-    public static NPCDialog createDialog(Path path) throws IOException {
+    public static NPCDialog createDialog(Path path) {
         NPCDialog dialogQuest = new NPCDialog();
 
         dialogQuest.setGlobal_id(global_id);
@@ -42,7 +42,7 @@ public class NPCDialog extends FileAbstract {
     }
 
     public void setGlobal_id(String global_id) {
-        this.global_id = global_id;
+        NPCDialog.global_id = global_id;
     }
 
 

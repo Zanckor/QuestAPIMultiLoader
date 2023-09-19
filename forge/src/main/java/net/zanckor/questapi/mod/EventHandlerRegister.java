@@ -1,5 +1,6 @@
 package net.zanckor.questapi.mod;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -26,19 +27,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static net.zanckor.questapi.CommonMain.*;
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
+import static net.zanckor.questapi.CommonMain.*;
 
-@Mod.EventBusSubscriber(modid = MOD_ID)
+@SuppressWarnings("ConstantConditions, unused")
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandlerRegister {
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent e) {
         LOG.info("QuestAPI Commands registered");
 
-        e.getDispatcher().register(Commands.literal("quests")
-                .requires((player) -> player.hasPermission(3))
+        CommandDispatcher<CommandSourceStack> dispatcher = e.getDispatcher();
+
+        dispatcher.register(Commands.literal("quests")
                 .then(Commands.literal("add")
                         .then(Commands.argument("player", EntityArgument.player())
                                 .then(Commands.argument("questID", StringArgumentType.string())
@@ -71,11 +74,6 @@ public class EventHandlerRegister {
                                                 QuestCommand.putQuestToItem(
                                                         context.getSource().getPlayer().getMainHandItem(),
                                                         StringArgumentType.getString(context, "questID"))))))
-                /*
-                .then(Commands.literal("create")
-                        .then(Commands.literal("quest")
-                                .executes((context -> QuestCommand.openQuestMaker(context)))))
-                 */
 
                 .then(Commands.literal("remove")
                         .then(Commands.argument("player", EntityArgument.player())
@@ -93,12 +91,6 @@ public class EventHandlerRegister {
                                                 return 0;
                                             }
                                         }))))
-
-                .then(Commands.literal("reload")
-                        .then(Commands.argument("identifier", StringArgumentType.string())
-                                .executes((context) -> QuestCommand.reloadQuests(
-                                        context,
-                                        StringArgumentType.getString(context, "identifier")))))
 
                 .then(Commands.literal("displayDialog")
                         .then(Commands.argument("dialogID", StringArgumentType.string())

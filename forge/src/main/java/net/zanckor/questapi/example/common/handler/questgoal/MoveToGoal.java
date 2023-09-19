@@ -11,8 +11,9 @@ import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 import java.io.File;
 import java.io.IOException;
 
-import static net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumGoalType.MOVE_TO;
+import static net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType.MOVE_TO;
 
+@SuppressWarnings("rawtypes")
 public class MoveToGoal extends ForgeAbstractGoal {
 
     public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
@@ -33,7 +34,7 @@ public class MoveToGoal extends ForgeAbstractGoal {
     }
 
     @Override
-    public void updateData(ServerPlayer player, File file) throws IOException {
+    public void updateData(ServerPlayer player, File file) {
     }
 
     @Override

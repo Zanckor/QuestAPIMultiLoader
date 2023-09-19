@@ -15,6 +15,7 @@ import net.zanckor.questapi.api.interfacemanager.enumquest.IEnumTargetType;
 
 import java.util.HashMap;
 
+@SuppressWarnings("unused")
 public class QuestTemplateRegistry {
 
     /**
@@ -23,40 +24,39 @@ public class QuestTemplateRegistry {
      */
 
 
-    private static HashMap<Enum, AbstractGoal> quest_goal = new HashMap<>();
-    private static HashMap<Enum, AbstractReward> quest_reward = new HashMap<>();
-    private static HashMap<Enum, AbstractQuestRequirement> quest_requirement = new HashMap<>();
-    private static HashMap<Enum, AbstractDialogRequirement> dialog_requirement = new HashMap<>();
-    private static HashMap<Enum, AbstractDialogOption> dialog_template = new HashMap<>();
-
-    private static HashMap<Enum, AbstractTargetType> target_type = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractGoal> quest_goal = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractReward> quest_reward = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractQuestRequirement> quest_requirement = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractDialogRequirement> dialog_requirement = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractDialogOption> dialog_template = new HashMap<>();
+    private static final HashMap<Enum<?>, AbstractTargetType> target_type = new HashMap<>();
 
     public static void registerQuest(IEnumQuestGoal key) {
-        quest_goal.put((Enum) key, key.getQuest());
+        quest_goal.put((Enum<?>) key, key.getQuest());
     }
 
     public static void registerDialogOption(IEnumDialogOption key) {
-        dialog_template.put((Enum) key, key.getDialogOption());
+        dialog_template.put((Enum<?>) key, key.getDialogOption());
     }
 
     public static void registerReward(IEnumQuestReward key) {
-        quest_reward.put((Enum) key, key.getReward());
+        quest_reward.put((Enum<?>) key, key.getReward());
     }
 
     public static void registerQuestRequirement(IEnumQuestRequirement key) {
-        quest_requirement.put((Enum) key, key.getRequirement());
+        quest_requirement.put((Enum<?>) key, key.getRequirement());
     }
 
     public static void registerDialogRequirement(IEnumDialogReq key) {
-        dialog_requirement.put((Enum) key, key.getDialogRequirement());
+        dialog_requirement.put((Enum<?>) key, key.getDialogRequirement());
     }
 
     public static void registerTargetType(IEnumTargetType key) {
-        target_type.put((Enum) key, key.getTargetType());
+        target_type.put((Enum<?>) key, key.getTargetType());
     }
 
 
-    public static AbstractGoal getQuestTemplate(Enum key) {
+    public static AbstractGoal getQuestTemplate(Enum<?> key) {
         try {
             return quest_goal.get(key);
         } catch (NullPointerException e) {
@@ -64,11 +64,11 @@ public class QuestTemplateRegistry {
         }
     }
 
-    public static HashMap<Enum, AbstractGoal> getAllGoals() {
+    public static HashMap<Enum<?>, AbstractGoal> getAllGoals() {
         return quest_goal;
     }
 
-    public static AbstractDialogOption getDialogTemplate(Enum key) {
+    public static AbstractDialogOption getDialogTemplate(Enum<?> key) {
         try {
             return dialog_template.get(key);
         } catch (NullPointerException e) {
@@ -76,7 +76,7 @@ public class QuestTemplateRegistry {
         }
     }
 
-    public static AbstractReward getQuestReward(Enum key) {
+    public static AbstractReward getQuestReward(Enum<?> key) {
         try {
             return quest_reward.get(key);
         } catch (NullPointerException e) {
@@ -84,7 +84,7 @@ public class QuestTemplateRegistry {
         }
     }
 
-    public static AbstractQuestRequirement getQuestRequirement(Enum key) {
+    public static AbstractQuestRequirement getQuestRequirement(Enum<?> key) {
         try {
             return quest_requirement.get(key);
         } catch (NullPointerException e) {
@@ -92,7 +92,7 @@ public class QuestTemplateRegistry {
         }
     }
 
-    public static AbstractDialogRequirement getDialogRequirement(Enum key) {
+    public static AbstractDialogRequirement getDialogRequirement(Enum<?> key) {
         try {
             return dialog_requirement.get(key);
         } catch (NullPointerException e) {
@@ -100,7 +100,7 @@ public class QuestTemplateRegistry {
         }
     }
 
-    public static AbstractTargetType getTranslatableTargetType(Enum key) {
+    public static AbstractTargetType getTranslatableTargetType(Enum<?> key) {
         return target_type.getOrDefault(key, null);
     }
 }

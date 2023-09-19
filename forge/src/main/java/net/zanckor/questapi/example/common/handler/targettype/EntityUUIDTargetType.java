@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static net.zanckor.questapi.mod.common.util.MCUtilClient.properNoun;
 
-
+@SuppressWarnings("ConstantConditions, unused")
 public class EntityUUIDTargetType extends AbstractTargetType {
 
     @Override

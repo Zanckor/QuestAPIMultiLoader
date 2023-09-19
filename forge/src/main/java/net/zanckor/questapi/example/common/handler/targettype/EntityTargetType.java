@@ -16,6 +16,7 @@ import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 import static net.zanckor.questapi.mod.common.util.MCUtilClient.properNoun;
 
+@SuppressWarnings("ConstantConditions")
 public class EntityTargetType extends AbstractTargetType {
 
     @Override

@@ -11,21 +11,19 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.screenmanager.AbstractDialog;
 import net.zanckor.questapi.api.screenmanager.NpcType;
 import net.zanckor.questapi.api.screenmanager.ScreenRegistry;
-import net.zanckor.questapi.mod.common.util.MCUtilClient;
-import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {
     public static List<UserQuest> trackedQuestList = new ArrayList<>();

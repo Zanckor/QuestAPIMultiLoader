@@ -11,17 +11,18 @@ import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
 import net.zanckor.questapi.commonutil.Util;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.handler.ClientHandler;
-import net.zanckor.questapi.mod.common.network.message.dialogoption.CloseDialog;
-import net.zanckor.questapi.mod.common.network.message.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.common.network.packet.dialogoption.CloseDialog;
+import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.nio.file.Paths;
 
 import static net.zanckor.questapi.CommonMain.*;
 
+@SuppressWarnings("ConstantConditions")
 public class DialogAddQuest extends AbstractDialogOption {
 
     /**
@@ -44,17 +46,18 @@ public class DialogAddQuest extends AbstractDialogOption {
 
     @Override
     public void handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+        //Checks if the player has the requirements
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
         String quest = option.getQuest_id() + ".json";
         Path userFolder = Paths.get(playerData.toString(), player.getUUID().toString());
 
+        //Checks if player already has the quest
         if (!(option.getType().equals(EnumDialogOption.ADD_QUEST.toString()))) return;
         if (Util.hasQuest(quest, userFolder)) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientHandler::closeDialog);
             return;
         }
-
 
         for (File file : serverQuests.toFile().listFiles()) {
             if (!(file.getName().equals(quest))) continue;
@@ -62,9 +65,12 @@ public class DialogAddQuest extends AbstractDialogOption {
             Path path = Paths.get(getActiveQuest(userFolder).toString(), File.separator, file.getName());
             ServerQuest serverQuest = (ServerQuest) GsonManager.getJsonClass(file, ServerQuest.class);
 
-            //Checks all quest requirements and return if player hasn't any requirement
+            //Checks if the player has all the requirements, else the quest won't be given
             for (int requirementIndex = 0; requirementIndex < serverQuest.getRequirements().size(); requirementIndex++) {
-                Enum questRequirementEnum = EnumRegistry.getEnum(serverQuest.getRequirements().get(requirementIndex).getType(), EnumRegistry.getQuestRequirement());
+                ServerRequirement serverRequirement = serverQuest.getRequirements().get(requirementIndex);
+                String requirementType = serverRequirement.getType() != null ? serverRequirement.getType() : "NONE";
+                Enum<?> questRequirementEnum = EnumRegistry.getEnum(requirementType, EnumRegistry.getDialogRequirement());
+
                 AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
 
                 if (!requirement.handler(player, serverQuest, requirementIndex)) {
@@ -73,6 +79,7 @@ public class DialogAddQuest extends AbstractDialogOption {
                 }
             }
 
+            //Give the player the quest
             UserQuest userQuest = UserQuest.createQuest(serverQuest, path);
             GsonManager.writeJson(path.toFile(), userQuest);
 
@@ -90,6 +97,7 @@ public class DialogAddQuest extends AbstractDialogOption {
         SendQuestPacket.TO_CLIENT(player, new ActiveQuestList(player.getUUID()));
     }
 
+    //Since the dialog is closed once the player clicks on this option, both methods call the first one. We don't need RL or Item
     @Override
     public void handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
         handler(player, dialog, option_id, (Entity) null);

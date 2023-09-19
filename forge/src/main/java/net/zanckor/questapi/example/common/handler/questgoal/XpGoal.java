@@ -11,8 +11,9 @@ import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 import java.io.File;
 import java.io.IOException;
 
-import static net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumGoalType.XP;
+import static net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType.XP;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 public class XpGoal extends ForgeAbstractGoal {
 
     public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
@@ -21,10 +22,17 @@ public class XpGoal extends ForgeAbstractGoal {
 
         if (questGoal.getCurrentAmount() == null) return;
 
+        // Calculate the current amount based on the player's experience level
         int currentAmount = player.experienceLevel >= questGoal.getAmount() ? questGoal.getAmount() : player.experienceLevel;
+
+        // Set the current amount in the quest goal
         questGoal.setCurrentAmount(currentAmount);
+
+        // Update the userQuest in the JSON file
         GsonManager.writeJson(file, userQuest);
 
+
+        // Retrieve the updated userQuest from the JSON file
         userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
         super.handler(player, entity, gson, file, userQuest, indexGoal, questType);
     }
@@ -35,7 +43,7 @@ public class XpGoal extends ForgeAbstractGoal {
     }
 
     @Override
-    public void updateData(ServerPlayer player, File file) throws IOException {
+    public void updateData(ServerPlayer player, File file) {
     }
 
     @Override

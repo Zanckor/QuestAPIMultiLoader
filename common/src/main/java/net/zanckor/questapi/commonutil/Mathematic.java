@@ -9,6 +9,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
+@SuppressWarnings("unused")
 public class Mathematic {
     public static boolean numberBetween(double number, double min, double max) {
         Range<Double> range = Range.between(min, max);
@@ -25,16 +26,13 @@ public class Mathematic {
     }
 
     public static int numberRandomizerBetween(int min, int max) {
-        int randomizer = (int) Mth.randomBetween(RandomSource.createNewThreadLocalInstance(), min, max);
-        return randomizer;
+        return (int) Mth.randomBetween(RandomSource.createNewThreadLocalInstance(), min, max);
     }
 
     public static Vec3 simpleMatrixToVec3(Matrix4f matrix4f) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         matrix4f.get(buffer);
 
-        Vec3 vec3 = new Vec3(buffer.get(3), buffer.get(7), buffer.get(11));
-
-        return vec3;
+        return new Vec3(buffer.get(3), buffer.get(7), buffer.get(11));
     }
 }

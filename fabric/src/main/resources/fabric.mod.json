@@ -1,35 +1,38 @@
 {
-    "schemaVersion": 1,
-    "id": "questapi",
-    "version": "1.3.8",
-    "name": "QuestAPI",
-    "description": "QuestApi is a forge library that allows modders and modpack makers to add easily quests & dialogs by npc, command...\njust adding a few .json with easy portability between words, servers and versions.",
-    "authors": [
-        "Zanckor"
+  "schemaVersion": 1,
+  "id": "questapi",
+  "version": "1.3.10",
+  "name": "QuestAPI",
+  "description": "QuestApi is a forge library that allows modders and modpack makers to add easily quests & dialogs by npc, command...\njust adding a few .json with easy portability between words, servers and versions.",
+  "authors": [
+    "Zanckor"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "MIT License",
+  "icon": "assets/questapi/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.zanckor.questapi.FabricQuestAPI"
     ],
-    "contact": {
-        "homepage": "https://fabricmc.net/",
-        "sources": "https://github.com/FabricMC/fabric-example-mod"
-    },
-    "license": "MIT License",
-    "icon": "assets/questapi/icon.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            "net.zanckor.questapi.FabricQuestAPI"
-        ]
-    },
-    "mixins": [
-        "questapi.fabric.mixins.json"
-    ],
-    "depends": {
-        "fabricloader": ">=0.14",
-        "fabric": "*",
-        "minecraft": "1.20",
-        "java": ">=17"
-    },
-    "suggests": {
-        "another-mod": "*"
-    }
+    "client": [
+      "net.zanckor.questapi.ClientHandler"
+    ]
+  },
+  "mixins": [
+    "questapi.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14",
+    "fabric": "*",
+    "minecraft": "1.20.1",
+    "java": ">=16"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
 }
   

@@ -17,7 +17,6 @@ import net.zanckor.questapi.api.screenmanager.ScreenRegistry;
 import net.zanckor.questapi.example.ModExample;
 import net.zanckor.questapi.mod.common.config.client.RendererConfig;
 import net.zanckor.questapi.mod.common.config.client.ScreenConfig;
-import net.zanckor.questapi.mod.common.config.server.GoalConfig;
 import net.zanckor.questapi.mod.common.network.NetworkHandler;
 
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
@@ -37,12 +36,11 @@ public class ForgeQuestAPI {
         LOG.info("Registering config files");
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ScreenConfig.SPEC, "questapi-screen.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, RendererConfig.SPEC, "questapi-renderer.toml");
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, GoalConfig.SPEC, "questapi-goals.toml");
     }
 
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public class ClientEventHandlerRegister {
+    public static class ClientEventHandlerRegister {
         @SubscribeEvent
         public static void registerOverlays(RegisterGuiOverlaysEvent e) {
             LOG.info("Registering overlay screens");
@@ -62,9 +60,7 @@ public class ForgeQuestAPI {
         public static KeyMapping registerKey(String name, int keycode) {
             LOG.info("Registering keys");
 
-            final var key = new KeyMapping("key." + MOD_ID + "." + name, keycode, "key.categories.QuestApi");
-
-            return key;
+            return new KeyMapping("key." + MOD_ID + "." + name, keycode, "key.categories.QuestApi");
         }
 
         @SubscribeEvent

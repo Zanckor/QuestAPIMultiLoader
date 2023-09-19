@@ -10,7 +10,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
+import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ public class LootTableReward extends AbstractReward {
      *
      * @param player      The player
      * @param serverQuest ServerQuestBase with global quest data
-     * @param rewardIndex
      * @throws IOException Exception fired when server cannot read json file
      * @see EnumQuestReward Reward types
      */
@@ -38,13 +38,19 @@ public class LootTableReward extends AbstractReward {
         ResourceLocation rl = new ResourceLocation(lootTableRL);
         LootTable lootTable = server.getLootData().getLootTable(rl);
 
-        for(int actualRoll = 0; actualRoll < rolls; actualRoll++) {
+        for (int actualRoll = 0; actualRoll < rolls; actualRoll++) {
             LootParams lootparams = (new LootParams.Builder((ServerLevel) player.level())).create(LootContextParamSets.EMPTY);
             itemStackList = lootTable.getRandomItems(lootparams);
         }
 
-        for(ItemStack itemStack : itemStackList){
-            player.getInventory().add(itemStack);
+        for (ItemStack itemStack : itemStackList) {
+
+            //If player's inventory has enough space, give to inventory, else drop it
+            if (Util.getFreeSlots(player) > 0) {
+                player.getInventory().add(itemStack);
+            } else {
+                player.drop(itemStack, false, false);
+            }
         }
     }
 }

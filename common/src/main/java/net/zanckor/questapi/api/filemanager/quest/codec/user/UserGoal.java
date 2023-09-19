@@ -4,6 +4,7 @@ import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerGoal;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class UserGoal {
     private String type;
     private String translatableType;

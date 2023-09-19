@@ -17,40 +17,27 @@ public class CommonMain {
     // write the majority of your code here and load it from your loader specific projects.
     public static void init() {
         Constants.LOG.info("Common init on {}! Currently in a {} environment!", Services.PLATFORM.getPlatform(), Services.PLATFORM.getEnvironmentName());
-
-
     }
-
 
 
     public static Path getUserFolder(UUID playerUUID) {
-        Path userFolder = Paths.get(playerData.toString(), playerUUID.toString());
-
-        return userFolder;
+        return Paths.get(playerData.toString(), playerUUID.toString());
     }
 
     public static Path getActiveQuest(Path userFolder) {
-        Path activeQuest = Paths.get(userFolder.toString(), "active-quests");
-
-        return activeQuest;
+        return Paths.get(userFolder.toString(), "active-quests");
     }
 
     public static Path getCompletedQuest(Path userFolder) {
-        Path completedQuest = Paths.get(userFolder.toString(), "completed-quests");
-
-        return completedQuest;
+        return Paths.get(userFolder.toString(), "completed-quests");
     }
 
     public static Path getFailedQuest(Path userFolder) {
-        Path uncompletedQuest = Paths.get(userFolder.toString(), "uncompleted-quests");
-
-        return uncompletedQuest;
+        return Paths.get(userFolder.toString(), "uncompleted-quests");
     }
 
     public static Path getReadDialogs(Path userFolder) {
-        Path readDialogs = Paths.get(userFolder.toString(), "read-dialogs");
-
-        return readDialogs;
+        return Paths.get(userFolder.toString(), "read-dialogs");
     }
 
 

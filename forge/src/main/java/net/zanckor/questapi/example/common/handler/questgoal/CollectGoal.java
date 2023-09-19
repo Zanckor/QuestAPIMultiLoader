@@ -1,6 +1,7 @@
 package net.zanckor.questapi.example.common.handler.questgoal;
 
 import com.google.gson.Gson;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -16,42 +17,27 @@ import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 import java.io.File;
 import java.io.IOException;
 
-import static net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumGoalType.COLLECT;
+import static net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType.COLLECT;
 
+@SuppressWarnings({"ConstantConditions", "rawtypes"})
 public class CollectGoal extends ForgeAbstractGoal {
+
 
     public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
         String questID = userQuest.getId();
         userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
+
+        //Check if the userQuest is null or doesn't match both id's
         if (userQuest == null || (!(questID.equals(userQuest.getId())))) return;
 
         updateData(player, file);
+
         super.handler(player, entity, gson, file, userQuest, indexGoal, questType);
     }
 
-    @Override
-    public void enhancedCompleteQuest(ServerPlayer player, File file, UserGoal userGoal) throws IOException {
-        UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
-        if (userQuest == null) return;
-
-        if (Util.isQuestCompleted(userQuest)) {
-            removeItems(player, userGoal);
-        }
-    }
-
-    public static void removeItems(ServerPlayer player, UserGoal goalEnhanced) {
-        if (!(goalEnhanced.getType().equals(COLLECT.name()))) return;
 
 
-        String valueItem = goalEnhanced.getTarget();
-        Item itemTarget = ForgeRegistries.ITEMS.getValue(new ResourceLocation(valueItem));
-
-        int itemSlot = player.getInventory().findSlotMatchingItem(itemTarget.getDefaultInstance());
-
-        if (itemSlot < 0) return;
-        player.getInventory().removeItem(itemSlot, goalEnhanced.getAmount());
-    }
-
+    // Method for updating quest data
     public void updateData(ServerPlayer player, File file) throws IOException {
         UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
         if (userQuest == null) return;
@@ -64,7 +50,7 @@ public class CollectGoal extends ForgeAbstractGoal {
             Item itemTarget = ForgeRegistries.ITEMS.getValue(new ResourceLocation(valueItem));
 
 
-            //Checks inventory's items
+            // Checks if the player's inventory contains the required item
             if (!player.getInventory().contains(itemTarget.getDefaultInstance())) {
                 questGoal.setCurrentAmount(0);
             } else {
@@ -76,6 +62,33 @@ public class CollectGoal extends ForgeAbstractGoal {
             }
 
             GsonManager.writeJson(file, userQuest);
+        }
+    }
+
+    // Method for removing items from player's inventory
+
+    public static void removeItems(ServerPlayer player, UserGoal goalEnhanced) {
+        if (!(goalEnhanced.getType().equals(COLLECT.name()))) return;
+
+        String valueItem = goalEnhanced.getTarget();
+        Item itemTarget = ForgeRegistries.ITEMS.getValue(new ResourceLocation(valueItem));
+
+        int itemSlot = player.getInventory().findSlotMatchingItem(itemTarget.getDefaultInstance());
+
+        // Check if the item is not found in the player's inventory
+        if (itemSlot < 0) return;
+        player.getInventory().removeItem(itemSlot, goalEnhanced.getAmount());
+    }
+
+
+    // Method for completing a quest
+    @Override
+    public void enhancedCompleteQuest(ServerPlayer player, File file, UserGoal userGoal) throws IOException {
+        UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
+        if (userQuest == null) return;
+
+        if (Util.isQuestCompleted(userQuest)) {
+            removeItems(player, userGoal);
         }
     }
 

@@ -8,9 +8,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.zanckor.questapi.CommonMain;
 import net.zanckor.questapi.commonutil.GsonManager;
-import org.jline.utils.Log;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -26,19 +25,16 @@ public class QuestJSONListener extends SimpleJsonResourceReloadListener {
     }
 
     public static void register(AddReloadListenerEvent e) {
-        e.addListener(new QuestJSONListener(GsonManager.gson, "assets/questapi/quest"));
+        e.addListener(new QuestJSONListener(GsonManager.gson, "questapi/quest"));
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    protected void apply(Map<ResourceLocation, JsonElement> jsonElementMap, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         LOG.info("Loaded quest datapack");
 
         jsonElementMap.forEach((rl, jsonElement) -> {
             JsonObject obj = jsonElement.getAsJsonObject();
-            if (obj.get("id") == null) return;
-
-            //Load quest
-            if(obj.get("goals") != null) {
+            if (obj.get("id") != null && obj.get("goals") != null) {
                 String questId = "." + obj.get("id").toString().substring(1, obj.get("id").toString().length() - 1);
                 Path path = Path.of(rl.getNamespace() + questId + ".json");
 

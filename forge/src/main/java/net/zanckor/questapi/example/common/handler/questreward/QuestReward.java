@@ -5,12 +5,13 @@ import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
-import net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
+import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import static net.zanckor.questapi.CommonMain.*;
 
+@SuppressWarnings("ConstantConditions")
 public class QuestReward extends AbstractReward {
 
     /**
@@ -25,7 +27,6 @@ public class QuestReward extends AbstractReward {
      *
      * @param player      The player
      * @param serverQuest ServerQuestBase with global quest data
-     * @param rewardIndex
      * @throws IOException Exception fired when server cannot read json file
      * @see EnumQuestReward Reward types
      */
@@ -43,7 +44,10 @@ public class QuestReward extends AbstractReward {
 
             //Checks all quest requirements and return if player hasn't any requirement
             for (int requirementIndex = 0; requirementIndex < rewardServerQuest.getRequirements().size(); requirementIndex++) {
-                Enum questRequirementEnum = EnumRegistry.getEnum(rewardServerQuest.getRequirements().get(requirementIndex).getType(), EnumRegistry.getQuestRequirement());
+                ServerRequirement serverRequirement = serverQuest.getRequirements().get(requirementIndex);
+                String requirementType = serverRequirement.getType() != null ? serverRequirement.getType() : "NONE";
+                Enum<?> questRequirementEnum = EnumRegistry.getEnum(requirementType, EnumRegistry.getDialogRequirement());
+
                 AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
 
                 if (!requirement.handler(player, rewardServerQuest, requirementIndex)) return;

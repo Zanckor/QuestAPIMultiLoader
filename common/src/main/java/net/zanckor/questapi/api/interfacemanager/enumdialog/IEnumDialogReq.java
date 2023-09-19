@@ -6,7 +6,7 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 public interface IEnumDialogReq {
     AbstractDialogRequirement getDialogRequirement();
 
-    default void registerEnumDialogReq(Class enumClass) {
+    default void registerEnumDialogReq(Class<?> enumClass) {
         EnumRegistry.registerDialogRequirement(enumClass);
     }
 }

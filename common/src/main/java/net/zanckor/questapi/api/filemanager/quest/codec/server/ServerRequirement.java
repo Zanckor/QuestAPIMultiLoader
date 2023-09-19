@@ -3,6 +3,7 @@ package net.zanckor.questapi.api.filemanager.quest.codec.server;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class ServerRequirement {
     private String type;
     private int requirements_min;

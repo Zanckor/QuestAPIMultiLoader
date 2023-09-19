@@ -7,11 +7,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 
 import java.io.File;
@@ -25,6 +23,7 @@ import java.util.UUID;
 
 import static net.zanckor.questapi.CommonMain.*;
 
+@SuppressWarnings("unused")
 public class Util {
     public static boolean isQuestCompleted(UserQuest userQuest) {
         int indexGoals = 0;
@@ -45,25 +44,26 @@ public class Util {
 
     public static void moveFileToCompletedFolder(UserQuest userQuest, ServerPlayer player, File file) throws IOException {
         Path userFolder = Paths.get(playerData.toFile().toString(), player.getUUID().toString());
-        String questName = userQuest.getId() + ".json";
+        String id = file.getName().substring(0, file.getName().length() - 5);
 
         Files.deleteIfExists(Paths.get(getCompletedQuest(userFolder).toString(), file.getName()));
         Files.move(file.toPath(), Paths.get(getCompletedQuest(userFolder).toString(), file.getName()));
 
         for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
-            Enum goalEnum = EnumRegistry.getEnum(userQuest.getQuestGoals().get(indexGoals).getType(), EnumRegistry.getQuestGoal());
+            Enum<?> goalEnum = EnumRegistry.getEnum(userQuest.getQuestGoals().get(indexGoals).getType(), EnumRegistry.getQuestGoal());
 
-            QuestDialogManager.movePathQuest(userQuest.getId(), Paths.get(getCompletedQuest(userFolder).toString(), questName), goalEnum);
+            QuestDialogManager.movePathQuest(id, Paths.get(getCompletedQuest(userFolder).toString(), file.getName()), goalEnum);
         }
     }
 
-    public static void moveFileToUncompletedFolder(Path uncompletedQuestFolder, File file, UserQuest userQuest, Enum goalEnum) throws IOException {
+    public static void moveFileToUncompletedFolder(Path uncompletedQuestFolder, File file, UserQuest userQuest, Enum<?> goalEnum) throws IOException {
         Path uncompletedPath = Paths.get(uncompletedQuestFolder.toString(), file.getName());
+        String id = file.getName().substring(0, file.getName().length() - 5);
 
         if (file.exists()) {
             Files.move(file.toPath(), uncompletedPath);
         }
-        QuestDialogManager.movePathQuest(userQuest.getId(), uncompletedPath, goalEnum);
+        QuestDialogManager.movePathQuest(id, uncompletedPath, goalEnum);
     }
 
     public static Entity getEntityByUUID(ServerLevel level, UUID uuid) {
@@ -86,7 +86,7 @@ public class Util {
         return slots;
     }
 
-    public static int createQuest(ServerQuest serverQuest, Player player, Path path) throws IOException {
+    public static void createQuest(ServerQuest serverQuest, Player player, Path path) throws IOException {
         UserQuest userQuest = UserQuest.createQuest(serverQuest, path);
 
         if (userQuest.hasTimeLimit()) {
@@ -95,8 +95,21 @@ public class Util {
 
         GsonManager.writeJson(path.toFile(), userQuest);
 
-        return 1;
     }
+
+    public static int getFreeSlots(Player player) {
+        Inventory inventory = player.getInventory();
+        int freeSlots = 0;
+
+        for(int slot = 0; slot < inventory.items.size(); ++slot) {
+            if (inventory.items.get(slot).isEmpty()) {
+                freeSlots++;
+            }
+        }
+
+        return freeSlots;
+    }
+
 
     public static boolean hasQuest(String quest, Path userFolder) {
         return Files.exists(Paths.get(getCompletedQuest(userFolder).toString(), quest)) || Files.exists(Paths.get(getActiveQuest(userFolder).toString(), quest)) || Files.exists(Paths.get(getFailedQuest(userFolder).toString(), quest));

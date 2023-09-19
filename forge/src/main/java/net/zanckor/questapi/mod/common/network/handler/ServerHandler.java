@@ -1,5 +1,11 @@
 package net.zanckor.questapi.mod.common.network.handler;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
 import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
@@ -8,26 +14,23 @@ import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.screenmanager.NpcType;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Timer;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.mod.common.util.MCUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
 import static net.zanckor.questapi.CommonMain.playerData;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 public class ServerHandler {
 
     public static void addQuest(Player player, Enum optionType, int optionID) {
@@ -51,18 +54,22 @@ public class ServerHandler {
         AbstractGoal quest = QuestTemplateRegistry.getQuestTemplate(questType);
         List<Path> questTypeLocation = QuestDialogManager.getQuestTypeLocation(questType);
 
-        if (quest == null || questTypeLocation == null) return;
+        if (quest == null || questTypeLocation == null || questTypeLocation.isEmpty()) return;
 
-        for (int i = 0; i < questTypeLocation.size(); i++) {
-            File file = questTypeLocation.get(i).toAbsolutePath().toFile();
+        List<Path> questTypeLocationCopy = new CopyOnWriteArrayList<>(QuestDialogManager.getQuestTypeLocation(questType));
+
+        for (Path path : questTypeLocationCopy) {
+            File file = path.toAbsolutePath().toFile();
             UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
             if (userQuest == null || userQuest.isCompleted()) continue;
 
-            for (int indexGoals = 0; indexGoals < userQuest.getQuestGoals().size(); indexGoals++) {
+            List<UserGoal> questGoals = new ArrayList<>(userQuest.getQuestGoals());
+
+            for (int indexGoals = 0; indexGoals < questGoals.size(); indexGoals++) {
                 userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
                 if (userQuest == null) return;
 
-                UserGoal questGoal = userQuest.getQuestGoals().get(indexGoals);
+                UserGoal questGoal = questGoals.get(indexGoals);
 
                 if (questGoal.getType().equals(questType.toString())) {
                     quest.handler(player, entity, GsonManager.gson, file, userQuest, indexGoals, questType);
@@ -71,21 +78,20 @@ public class ServerHandler {
         }
     }
 
-    public static void requestDialog(ServerPlayer player, int optionID, Enum optionType, UUID entityUUID, String resourceLocation, Item item, NpcType npcType) {
+
+    public static void requestDialog(ServerPlayer player, int optionID, Enum optionType, UUID entityUUID, Item item, NpcType npcType) {
         String globalDialogID = QuestDialogManager.currentGlobalDialog.get(player);
 
         Path path = QuestDialogManager.getDialogLocation(globalDialogID);
         File dialogFile = path.toFile();
         AbstractDialogOption dialogTemplate = QuestTemplateRegistry.getDialogTemplate(optionType);
-
         try {
             NPCConversation dialog = (NPCConversation) GsonManager.getJsonClass(dialogFile, NPCConversation.class);
 
             switch (npcType) {
                 case ITEM -> dialogTemplate.handler(player, dialog, optionID, item);
-                case UUID ->
-                        dialogTemplate.handler(player, dialog, optionID, Util.getEntityByUUID(player.serverLevel().getLevel(), entityUUID));
-                case RESOURCE_LOCATION -> dialogTemplate.handler(player, dialog, optionID, resourceLocation);
+                case RESOURCE_LOCATION, UUID ->
+                        dialogTemplate.handler(player, dialog, optionID, MCUtil.getEntityByUUID((ServerLevel) player.level(), entityUUID));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

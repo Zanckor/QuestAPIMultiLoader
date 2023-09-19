@@ -12,8 +12,9 @@ import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 import java.io.File;
 import java.io.IOException;
 
-import static net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumGoalType.INTERACT_ENTITY;
+import static net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType.INTERACT_ENTITY;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 public class InteractEntityGoal extends ForgeAbstractGoal {
 
     public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
@@ -37,7 +38,7 @@ public class InteractEntityGoal extends ForgeAbstractGoal {
     }
 
     @Override
-    public void updateData(ServerPlayer player, File file) throws IOException {
+    public void updateData(ServerPlayer player, File file) {
     }
 
     @Override

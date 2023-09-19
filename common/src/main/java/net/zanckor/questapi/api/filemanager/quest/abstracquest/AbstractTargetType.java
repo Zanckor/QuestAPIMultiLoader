@@ -12,9 +12,6 @@ public abstract class AbstractTargetType {
      * Class that returns as a human-readable text the quest target
      *
      * @param resourceLocationString Resource location of the target wanted to translate. Example: entity.minecraft.cow
-     * @param player
-     * @param chatFormatting
-     * @param chatFormatting1
      */
 
     public abstract MutableComponent handler(String resourceLocationString, UserGoal goal, Player player, ChatFormatting chatFormatting, ChatFormatting chatFormatting1);

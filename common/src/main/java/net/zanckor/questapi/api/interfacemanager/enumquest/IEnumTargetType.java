@@ -6,7 +6,7 @@ import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 public interface IEnumTargetType {
     AbstractTargetType getTargetType();
 
-    default void registerTargetType(Class enumClass) {
+    default void registerTargetType(Class<?> enumClass) {
         EnumRegistry.registerTargetType(enumClass);
     }
 }

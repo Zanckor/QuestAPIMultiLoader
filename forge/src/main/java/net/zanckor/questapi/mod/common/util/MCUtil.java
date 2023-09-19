@@ -18,13 +18,14 @@ import net.zanckor.questapi.api.datamanager.QuestDialogManager;
 import net.zanckor.questapi.api.filemanager.dialog.codec.ReadDialog;
 import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
 import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
 import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.api.registrymanager.EnumRegistry;
 import net.zanckor.questapi.commonutil.GsonManager;
 import net.zanckor.questapi.commonutil.Util;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
-import net.zanckor.questapi.mod.common.network.message.quest.ActiveQuestList;
+import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import java.util.UUID;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
 import static net.zanckor.questapi.CommonMain.*;
 
+@SuppressWarnings("ConstantConditions, rawtypes, unused")
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class MCUtil {
 
@@ -99,7 +101,10 @@ public class MCUtil {
 
                 //Checks if player has all requirements
                 for (int requirementIndex = 0; requirementIndex < serverQuest.getRequirements().size(); requirementIndex++) {
-                    Enum questRequirementEnum = EnumRegistry.getEnum(serverQuest.getRequirements().get(requirementIndex).getType(), EnumRegistry.getQuestRequirement());
+                    ServerRequirement serverRequirement = serverQuest.getRequirements().get(requirementIndex);
+                    String requirementType = serverRequirement.getType() != null ? serverRequirement.getType() : "NONE";
+                    Enum<?> questRequirementEnum = EnumRegistry.getEnum(requirementType, EnumRegistry.getDialogRequirement());
+
                     AbstractQuestRequirement requirement = QuestTemplateRegistry.getQuestRequirement(questRequirementEnum);
 
                     if (!requirement.handler(player, serverQuest, requirementIndex)) {
@@ -239,7 +244,6 @@ public class MCUtil {
 
         return slots;
     }
-
 
     public static int randomBetween(double min, double max) {
         return (int) ((Math.random() * (max - min)) + min);

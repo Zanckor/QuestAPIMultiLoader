@@ -12,8 +12,9 @@ import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 import java.io.File;
 import java.io.IOException;
 
-import static net.zanckor.questapi.mod.filemanager.dialogquestregistry.enumquest.EnumGoalType.KILL;
+import static net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType.KILL;
 
+@SuppressWarnings("ConstantConditions, rawtypes")
 public class KillGoal extends ForgeAbstractGoal {
     public void handler(ServerPlayer player, Entity entity, Gson gson, File file, UserQuest userQuest, int indexGoal, Enum questType) throws IOException {
         userQuest = (UserQuest) GsonManager.getJsonClass(file, UserQuest.class);
@@ -36,7 +37,7 @@ public class KillGoal extends ForgeAbstractGoal {
     }
 
     @Override
-    public void updateData(ServerPlayer player, File file) throws IOException {
+    public void updateData(ServerPlayer player, File file) {
     }
 
     @Override
