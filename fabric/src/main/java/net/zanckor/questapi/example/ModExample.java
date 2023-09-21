@@ -12,7 +12,6 @@ import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
 import net.zanckor.questapi.eventmanager.annotation.Side;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
-import net.zanckor.questapi.example.core.registry.NpcRegistry;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadDialog;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadDialogList;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadQuest;
@@ -46,8 +45,6 @@ public class ModExample {
      */
     public ModExample() {
         LOG.info("Creating Example code");
-
-        NpcRegistry.registerEntity();
 
         Arrays.stream(EnumGoalType.values()).forEach(QuestTemplateRegistry::registerQuest);
         Arrays.stream(EnumQuestReward.values()).forEach(QuestTemplateRegistry::registerReward);

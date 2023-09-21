@@ -3,11 +3,9 @@ package net.zanckor.questapi.example;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogOption;
 import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogRequirement;
 import net.zanckor.questapi.api.file.quest.abstracquest.AbstractGoal;
@@ -20,7 +18,6 @@ import net.zanckor.questapi.example.client.screen.dialog.DialogScreen;
 import net.zanckor.questapi.example.client.screen.dialog.MinimalistDialogScreen;
 import net.zanckor.questapi.example.client.screen.hud.RenderQuestTracker;
 import net.zanckor.questapi.example.client.screen.questlog.QuestLog;
-import net.zanckor.questapi.example.core.registry.NpcRegistry;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadDialog;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadDialogList;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.LoadQuest;
@@ -55,9 +52,6 @@ public class ModExample {
 
     public ModExample() {
         LOG.info("Creating Example code");
-
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        NpcRegistry.register(modEventBus);
 
         Arrays.stream(EnumGoalType.values()).forEach(QuestTemplateRegistry::registerQuest);
         Arrays.stream(EnumQuestReward.values()).forEach(QuestTemplateRegistry::registerReward);

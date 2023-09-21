@@ -3,15 +3,14 @@ package net.zanckor.questapi.example;
 import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.screen.AbstractQuestTracked;
 import net.zanckor.questapi.api.registry.ScreenRegistry;
+import net.zanckor.questapi.api.screen.AbstractQuestTracked;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
 import net.zanckor.questapi.eventmanager.annotation.Side;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
@@ -19,8 +18,6 @@ import net.zanckor.questapi.example.client.screen.dialog.DialogScreen;
 import net.zanckor.questapi.example.client.screen.dialog.MinimalistDialogScreen;
 import net.zanckor.questapi.example.client.screen.hud.RenderQuestTracker;
 import net.zanckor.questapi.example.client.screen.questlog.QuestLog;
-import net.zanckor.questapi.example.common.entity.client.NPCRenderer;
-import net.zanckor.questapi.example.core.registry.NpcRegistry;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumGoalType;
 
 import java.util.Arrays;
@@ -32,7 +29,6 @@ import static net.zanckor.questapi.mod.common.config.client.ScreenConfig.QUEST_T
 @EventSubscriber(side = Side.CLIENT)
 public class ClientModSetup {
     public ClientModSetup() {
-        EntityRendererRegistry.INSTANCE.register(NpcRegistry.NPC_ENTITY, NPCRenderer::new);
         Arrays.stream(EnumGoalType.EnumTargetType.values()).forEach(QuestTemplateRegistry::registerTargetType);
 
         registerScreen();
