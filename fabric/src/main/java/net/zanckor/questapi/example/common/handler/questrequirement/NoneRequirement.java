@@ -1,8 +1,8 @@
 package net.zanckor.questapi.example.common.handler.questrequirement;
 
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractQuestRequirement;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogReq;
 
 import java.io.IOException;

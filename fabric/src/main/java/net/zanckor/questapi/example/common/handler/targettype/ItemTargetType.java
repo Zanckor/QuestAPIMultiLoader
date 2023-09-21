@@ -9,8 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
 import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 import static net.zanckor.questapi.mod.common.util.MCUtilClient.properNoun;

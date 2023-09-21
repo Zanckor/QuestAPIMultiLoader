@@ -2,12 +2,9 @@ package net.zanckor.questapi.example.client.screen.hud;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
-import net.zanckor.questapi.eventmanager.annotation.Side;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
-import net.zanckor.questapi.eventmanager.event.PlayerEvent.PlayerTickEvent;
 
 import static net.zanckor.questapi.mod.common.network.handler.NetworkClientHandler.trackedQuestList;
 

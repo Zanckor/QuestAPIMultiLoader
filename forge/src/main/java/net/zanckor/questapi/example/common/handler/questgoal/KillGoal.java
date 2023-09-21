@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.util.GsonManager;
 import net.zanckor.questapi.mod.common.questhandler.ForgeAbstractGoal;
 
 import java.io.File;

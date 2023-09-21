@@ -6,7 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.mod.common.network.handler.ServerHandler;
 
 import java.io.IOException;

@@ -11,10 +11,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.api.screenmanager.NpcType;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.dialog.codec.NPCDialog;
+import net.zanckor.questapi.api.screen.NpcType;
 import net.zanckor.questapi.mod.common.network.NetworkHandler;
 import net.zanckor.questapi.mod.common.network.handler.NetworkClientHandler;
 import net.zanckor.questapi.mod.common.network.packet.AbstractPacket;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class DisplayDialog extends AbstractPacket {
 
-    NPCConversation dialogTemplate;
+    Conversation dialogTemplate;
 
     String identifier;
     int dialogID;
@@ -45,28 +45,28 @@ public class DisplayDialog extends AbstractPacket {
     NpcType npcType;
 
 
-    private void displayDialog(NPCConversation dialogTemplate, String identifier, int dialogID, Player player) throws IOException {
-        this.dialogTemplate = dialogTemplate;
+    private void displayDialog(Conversation conversation, String identifier, int dialogID, Player player) throws IOException {
+        this.dialogTemplate = conversation;
         this.dialogID = dialogID;
         this.identifier = identifier != null ? identifier : "questapi";
 
         QuestDialogManager.currentDialog.put(player, dialogID);
-        MCUtil.writeDialogRead(player, dialogID);
+        MCUtil.writeDialogRead(player, conversation.getConversationID(), dialogID);
     }
 
-    public DisplayDialog(NPCConversation dialogTemplate, String identifier, int dialogID, Player player, Entity entity) throws IOException {
+    public DisplayDialog(Conversation dialogTemplate, String identifier, int dialogID, Player player, Entity entity) throws IOException {
         displayDialog(dialogTemplate, identifier, dialogID, player);
         this.entityUUID = entity == null ? player.getUUID() : entity.getUUID();
         this.npcType = NpcType.UUID;
     }
 
-    public DisplayDialog(NPCConversation dialogTemplate, String identifier, int dialogID, Player player, String resourceLocation) throws IOException {
+    public DisplayDialog(Conversation dialogTemplate, String identifier, int dialogID, Player player, String resourceLocation) throws IOException {
         displayDialog(dialogTemplate, identifier, dialogID, player);
         this.resourceLocation = resourceLocation;
         this.npcType = NpcType.RESOURCE_LOCATION;
     }
 
-    public DisplayDialog(NPCConversation dialogTemplate, String identifier, int dialogID, Player player, Item item) throws IOException {
+    public DisplayDialog(Conversation dialogTemplate, String identifier, int dialogID, Player player, Item item) throws IOException {
         displayDialog(dialogTemplate, identifier, dialogID, player);
         this.item = item;
         this.npcType = NpcType.ITEM;

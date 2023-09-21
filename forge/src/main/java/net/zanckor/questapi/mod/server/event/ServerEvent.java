@@ -12,19 +12,20 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.codec.EntityTypeTagDialog;
-import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.codec.EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.npc.entity_type_tag.codec.EntityTypeTagDialog;
+import net.zanckor.questapi.api.file.npc.entity_type_tag.codec.EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.registry.EnumRegistry;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.npcmarker.ValidNPCMarker;
 import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
 import net.zanckor.questapi.mod.common.util.MCUtil;
 import net.zanckor.questapi.mod.server.startdialog.StartDialog;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
+import net.zanckor.questapi.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static net.zanckor.questapi.CommonMain.*;
 import static net.zanckor.questapi.CommonMain.Constants.LOG;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
+import static net.zanckor.questapi.CommonMain.*;
 
 @SuppressWarnings("ConstantConditions")
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -138,7 +139,7 @@ public class ServerEvent {
 
         if (serverDialogs.toFile().listFiles() != null) {
             for (File file : serverDialogs.toFile().listFiles()) {
-                QuestDialogManager.registerDialogLocation(file.getName(), file.toPath().toAbsolutePath());
+                QuestDialogManager.registerConversationLocation(file.getName(), file.toPath().toAbsolutePath());
             }
         }
 
@@ -174,18 +175,32 @@ public class ServerEvent {
         Entity target = e.getTarget();
         String targetEntityType = EntityType.getKey(target.getType()).toString();
 
-        List<String> dialogPerEntityType = QuestDialogManager.getDialogPerEntityType(targetEntityType);
+        // Get the list of dialogs associated with the entity type
+        List<String> dialogPerEntityType = QuestDialogManager.getDialogPathByEntityType(targetEntityType);
 
+        // Check if the player has interacted with an entity that has a dialog
+        // Show the first dialog if available, or open the menu of the entity
         if (!player.level().isClientSide && dialogPerEntityType != null && e.getHand().equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
             String selectedDialog = target.getPersistentData().getString("dialog");
 
-            if (target.getPersistentData().get("dialog") == null) {
-                int selectedInteger = MCUtil.randomBetween(0, dialogPerEntityType.size());
-                selectedDialog = dialogPerEntityType.get(selectedInteger);
+            // If the player hasn't read any dialog of the entity, display the first conversation
+            // If they have read dialogs, display the next conversation if available
+            if (target.getPersistentData().get("dialog") == null || Util.isConversationCompleted(selectedDialog, player)) {
+
+                // Find the first unread conversation for the entity
+                for (String conversationID : dialogPerEntityType) {
+
+                    if (!Util.isConversationCompleted(conversationID, player)) {
+                        selectedDialog = conversationID;
+
+                        break;
+                    }
+                }
 
                 target.getPersistentData().putString("dialog", selectedDialog);
             }
 
+            // Load the selected dialog for the player and the target entity
             StartDialog.loadDialog(player, selectedDialog, target);
         }
     }
@@ -194,11 +209,13 @@ public class ServerEvent {
     public static void loadDialogPerCompoundTag(PlayerInteractEvent.EntityInteract e) throws IOException {
         Player player = e.getEntity();
         Entity target = e.getTarget();
-        List<String> dialogs = new ArrayList<>();
+        List<String> dialogList = new ArrayList<>();
 
+        //If player has interacted with an entity that has an dialog, show the first, else open the menu of the entity (If has)
         if (!player.level().isClientSide && e.getHand().equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
 
-            for (Map.Entry<String, File> entry : QuestDialogManager.dialogPerCompoundTag.entrySet()) {
+            //Checks all conditions for each conversation to check if entity has the tags for display a conversation
+            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByrCompoundTag.entrySet()) {
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(target);
                 File value = entry.getValue();
                 EntityTypeTagDialog entityTypeDialog = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);
@@ -208,6 +225,7 @@ public class ServerEvent {
                     boolean tagCompare;
 
                     switch (conditions.getLogic_gate()) {
+                        //If one of all conditions is true, can start the conversation
                         case OR -> {
                             for (EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
                                 if (entityNBT.get(nbt.getTag()) == null) {
@@ -218,12 +236,14 @@ public class ServerEvent {
                                 tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
 
                                 if (tagCompare) {
-                                    dialogs.addAll(conditions.getDialog_list());
+                                    dialogList.addAll(conditions.getDialog_list());
 
                                     continue conditions;
                                 }
                             }
                         }
+
+                        //If all conditions are true, can start the conversation
                         case AND -> {
                             boolean shouldAddDialogList = false;
 
@@ -241,7 +261,7 @@ public class ServerEvent {
                             }
 
                             if (shouldAddDialogList) {
-                                dialogs.addAll(conditions.getDialog_list());
+                                dialogList.addAll(conditions.getDialog_list());
                             }
 
                         }
@@ -249,16 +269,27 @@ public class ServerEvent {
                 }
             }
 
-            if (!dialogs.isEmpty()) {
+            if (!dialogList.isEmpty()) {
                 e.setCanceled(true);
 
                 String selectedDialog = target.getPersistentData().getString("dialog");
 
-                if (target.getPersistentData().get("dialog") == null && !dialogs.isEmpty()) {
-                    int selectedInteger = MCUtil.randomBetween(0, dialogs.size());
-                    selectedDialog = dialogs.get(selectedInteger);
+                //If player didn't read any dialog of entity, display the first conversation, else, if finish the current conversation display the next one
+                if (!dialogList.isEmpty()) {
+                    if (target.getPersistentData().get("dialog") == null || Util.isConversationCompleted(selectedDialog, player)) {
 
-                    target.getPersistentData().putString("dialog", selectedDialog);
+                        // Find the first unread conversation for the entity
+                        for (String conversationID : dialogList) {
+
+                            if (!Util.isConversationCompleted(conversationID, player)) {
+                                selectedDialog = conversationID;
+                                break;
+                            }
+                        }
+
+
+                        target.getPersistentData().putString("dialog", selectedDialog);
+                    }
                 }
 
                 StartDialog.loadDialog(player, selectedDialog, target);

@@ -4,13 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Mathematic;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Mathematic;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
-import net.zanckor.questapi.eventmanager.annotation.Side;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
 import net.zanckor.questapi.eventmanager.event.PlayerEvent.PlayerTickEvent;
 import net.zanckor.questapi.mod.common.network.handler.NetworkServerHandler;
@@ -30,7 +29,7 @@ public class MoveToEvent {
     public static void moveToQuest(ServerPlayer player) throws IOException {
         if (Objects.requireNonNull(player.getServer()).getTickCount() % 20 != 0) return;
 
-        List<Path> moveToQuests = QuestDialogManager.getQuestTypeLocation(MOVE_TO);
+        List<Path> moveToQuests = QuestDialogManager.getQuestTypePathLocation(MOVE_TO);
 
         if (moveToQuests != null) {
             for (Path path : moveToQuests) {

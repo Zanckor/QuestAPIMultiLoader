@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.storage.LevelResource;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.npc.entity_type.codec.EntityTypeDialog;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.npc.entity_type.codec.EntityTypeDialog;
+import net.zanckor.questapi.util.GsonManager;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -49,7 +49,7 @@ public class LoadDialogList {
             return false;
         });
 
-        QuestDialogManager.registerDialogPerEntityType();
+        QuestDialogManager.registerDialogByEntityType();
     }
 
 

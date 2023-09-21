@@ -3,10 +3,10 @@ package net.zanckor.questapi.example.common.handler.dialogoption;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogOption;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.dialog.codec.NPCDialog;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
@@ -26,7 +26,7 @@ public class DialogOpenDialog extends AbstractDialogOption {
 
 
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, Entity entity) throws IOException {
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
 
@@ -36,7 +36,7 @@ public class DialogOpenDialog extends AbstractDialogOption {
     }
 
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, String resourceLocation) throws IOException {
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
 
@@ -46,7 +46,7 @@ public class DialogOpenDialog extends AbstractDialogOption {
     }
 
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, Item item) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, Item item) throws IOException {
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
 

@@ -3,10 +3,10 @@ package net.zanckor.questapi.example.common.handler.dialogrequirement;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogRequirement;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogRequirement;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.dialog.codec.NPCDialog;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogReq;
@@ -28,7 +28,7 @@ public class NoneRequirement extends AbstractDialogRequirement {
 
 // Handler method for player interactions with NPC conversations
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, Entity entity) throws IOException {
         // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
         String requirementType = requirement.getType() != null ? requirement.getType() : "NONE";
@@ -44,7 +44,7 @@ public class NoneRequirement extends AbstractDialogRequirement {
 
     // Handler method for player interactions with NPC conversations using a specific resource location
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, String resourceLocation) throws IOException {
         // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
         String requirementType = requirement.getType();
@@ -60,7 +60,7 @@ public class NoneRequirement extends AbstractDialogRequirement {
 
     // Handler method for player interactions with NPC conversations using an item
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, Item item) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, Item item) throws IOException {
         // Get the requirement for the selected dialog option
         NPCDialog.DialogRequirement requirement = dialog.getDialog().get(option_id).getServerRequirements();
         String requirementType = requirement.getType();
@@ -74,17 +74,17 @@ public class NoneRequirement extends AbstractDialogRequirement {
     }
 
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, Entity entity) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, Entity entity) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, entity));
     }
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, String resourceLocation) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, String resourceLocation) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, resourceLocation));
     }
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, Item item) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, Item item) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, item));
     }

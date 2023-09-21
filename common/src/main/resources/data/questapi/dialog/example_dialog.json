@@ -1,0 +1,28 @@
+{
+  "dialog": [
+    {
+      "id": 0,
+      "dialogText": "Hello adventurer, I need help with a task, would you help me?",
+      "requirements": {
+        "type": "QUEST",
+        "quest_id": "questapi.example_quest",
+        "requirement_status": "NOT_OBTAINED"
+      },
+      "options": [
+        {
+          "text": "Sure, tell me what you need.",
+          "type": "OPEN_DIALOG",
+          "global_id": "questapi.collect_items_dialog",
+          "dialog": 1
+        },
+        {
+          "text": "No, sorry, I don\u0027t have time.",
+          "type": "OPEN_DIALOG",
+          "global_id": "questapi.example_quest",
+          "dialog": 2
+        }
+      ]
+    }
+  ],
+  "identifier": "minimalist_questapi"
+}

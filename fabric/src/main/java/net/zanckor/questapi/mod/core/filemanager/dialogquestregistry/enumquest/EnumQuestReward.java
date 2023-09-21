@@ -1,7 +1,7 @@
 package net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest;
 
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
-import net.zanckor.questapi.api.interfacemanager.enumquest.IEnumQuestReward;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractReward;
+import net.zanckor.questapi.api.enuminterface.enumquest.IEnumQuestReward;
 import net.zanckor.questapi.example.common.handler.questreward.*;
 
 public enum EnumQuestReward implements IEnumQuestReward {

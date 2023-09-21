@@ -5,9 +5,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import net.zanckor.questapi.CommonMain;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
 import net.zanckor.questapi.mod.common.network.handler.ClientHandler;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.util.GsonManager;
 
 import java.io.File;
 import java.io.IOException;

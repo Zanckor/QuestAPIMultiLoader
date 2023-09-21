@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.storage.LevelResource;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.util.GsonManager;
 import net.zanckor.questapi.mod.common.datapack.DialogJSONListener;
 
 import java.io.*;
@@ -22,7 +22,7 @@ public class LoadDialog {
      * Each time that server starts running, <code> registerDialog </code> is called to copy resource's dialog files to minecraft folder.
      */
 
-    static NPCConversation dialogTemplate;
+    static Conversation dialogTemplate;
 
     public static void registerDialog(MinecraftServer server, String modid) {
         ResourceManager resourceManager = server.getResourceManager();
@@ -35,7 +35,7 @@ public class LoadDialog {
             if (file.getPath().length() > 7) {
                 String fileName = file.getPath().substring(7);
                 ResourceLocation resourceLocation = new ResourceLocation(modid, file.getPath());
-                if(!modid.equals(file.getNamespace())) return false;
+                if (!modid.equals(file.getNamespace())) return false;
 
                 if (file.getPath().endsWith(".json")) {
                     read(resourceLocation, server);
@@ -55,7 +55,7 @@ public class LoadDialog {
             FolderManager.createAPIFolder(server.getWorldPath(LevelResource.ROOT).toAbsolutePath());
         }
 
-        for(Map.Entry<String, JsonObject> entry : DialogJSONListener.datapackDialogList.entrySet()){
+        for (Map.Entry<String, JsonObject> entry : DialogJSONListener.datapackDialogList.entrySet()) {
             FileWriter writer = new FileWriter(String.valueOf(Path.of(serverDialogs + "/" + entry.getKey())));
             writer.write(entry.getValue().toString());
             writer.close();
@@ -64,27 +64,28 @@ public class LoadDialog {
 
     private static void read(ResourceLocation resourceLocation, MinecraftServer server) {
         try {
-            if(server.getResourceManager().getResource(resourceLocation).isEmpty()) return;
+            if (server.getResourceManager().getResource(resourceLocation).isEmpty()) return;
 
             InputStream inputStream = server.getResourceManager().getResource(resourceLocation).get().open();
-            dialogTemplate = GsonManager.gson.fromJson(new InputStreamReader(inputStream), NPCConversation.class);
+            dialogTemplate = GsonManager.gson.fromJson(new InputStreamReader(inputStream), Conversation.class);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void write(NPCConversation dialogTemplate, String identifier, String fileName) {
+    private static void write(Conversation conversation, String identifier, String fileName) {
         try {
-            if(dialogTemplate == null) return;
+            if (conversation == null) return;
 
             File file = new File(serverDialogs.toFile(), identifier + "." + fileName);
+            conversation.setConversationID(identifier + "." + fileName.substring(0, fileName.length() - 5));
 
-            if (dialogTemplate.getIdentifier() == null || dialogTemplate.getIdentifier().isEmpty()) {
-                dialogTemplate.setIdentifier(identifier);
+            if (conversation.getIdentifier() == null || conversation.getIdentifier().isEmpty()) {
+                conversation.setIdentifier(identifier);
             }
 
-            GsonManager.writeJson(file, dialogTemplate);
+            GsonManager.writeJson(file, conversation);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.screenmanager.NpcType;
+import net.zanckor.questapi.api.screen.NpcType;
 import net.zanckor.questapi.mod.common.network.NetworkHandler;
 import net.zanckor.questapi.mod.common.network.handler.NetworkServerHandler;
 import net.zanckor.questapi.mod.common.network.packet.AbstractPacket;

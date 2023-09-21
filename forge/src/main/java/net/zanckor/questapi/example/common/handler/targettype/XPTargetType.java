@@ -5,8 +5,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
 import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 

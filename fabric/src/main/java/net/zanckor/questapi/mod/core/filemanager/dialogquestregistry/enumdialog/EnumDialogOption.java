@@ -1,8 +1,8 @@
 package net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog;
 
 
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
-import net.zanckor.questapi.api.interfacemanager.enumdialog.IEnumDialogOption;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogOption;
+import net.zanckor.questapi.api.enuminterface.enumdialog.IEnumDialogOption;
 import net.zanckor.questapi.example.common.handler.dialogoption.DialogAddQuest;
 import net.zanckor.questapi.example.common.handler.dialogoption.DialogCloseDialog;
 import net.zanckor.questapi.example.common.handler.dialogoption.DialogOpenDialog;

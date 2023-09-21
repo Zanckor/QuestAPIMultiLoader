@@ -13,25 +13,24 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.codec.EntityTypeTagDialog;
-import net.zanckor.questapi.api.screenmanager.AbstractQuestLog;
-import net.zanckor.questapi.api.screenmanager.ScreenRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.file.npc.entity_type_tag.codec.EntityTypeTagDialog;
+import net.zanckor.questapi.api.registry.ScreenRegistry;
+import net.zanckor.questapi.api.screen.AbstractQuestLog;
 import net.zanckor.questapi.mod.common.config.client.RendererConfig;
 import net.zanckor.questapi.mod.common.config.client.ScreenConfig;
 import net.zanckor.questapi.mod.common.network.handler.ClientHandler;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import org.joml.Quaternionf;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static net.zanckor.questapi.ClientForgeQuestAPI.questMenu;
 import static net.zanckor.questapi.CommonMain.Constants.MOD_ID;
-import static net.zanckor.questapi.ForgeQuestAPI.ClientEventHandlerRegister.questMenu;
 
 @SuppressWarnings("ConstantConditions, rawtypes")
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)

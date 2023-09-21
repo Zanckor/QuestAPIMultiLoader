@@ -6,8 +6,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
 import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 import static net.zanckor.questapi.mod.common.util.MCUtilClient.properNoun;

@@ -5,7 +5,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.util.Util;
 
 import java.util.UUID;
 import java.util.function.Supplier;

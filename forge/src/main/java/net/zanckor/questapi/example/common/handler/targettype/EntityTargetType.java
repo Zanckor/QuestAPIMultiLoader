@@ -10,8 +10,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
 import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 import static net.zanckor.questapi.mod.common.util.MCUtilClient.properNoun;

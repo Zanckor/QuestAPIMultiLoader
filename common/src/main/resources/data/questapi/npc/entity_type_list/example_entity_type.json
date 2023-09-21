@@ -1,0 +1,10 @@
+{
+  "id": "example_entity_type",
+  "entity_type": [
+    "minecraft:cat"
+  ],
+  "dialog_list": [
+    "questapi.example_dialog",
+    "questapi.asda"
+  ]
+}

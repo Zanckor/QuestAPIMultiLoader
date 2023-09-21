@@ -5,11 +5,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
 import net.zanckor.questapi.eventmanager.annotation.Side;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
-import net.zanckor.questapi.eventmanager.event.PlayerEvent;
 import net.zanckor.questapi.eventmanager.event.PlayerEvent.PlayerInteractEvent.PlayerInteractEntity;
 import net.zanckor.questapi.mod.common.network.handler.NetworkServerHandler;
 

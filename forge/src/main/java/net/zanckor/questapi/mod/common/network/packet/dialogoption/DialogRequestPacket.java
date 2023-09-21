@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.network.NetworkEvent;
-import net.zanckor.questapi.api.screenmanager.NpcType;
+import net.zanckor.questapi.api.screen.NpcType;
 import net.zanckor.questapi.mod.common.network.handler.ServerHandler;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogOption;
 

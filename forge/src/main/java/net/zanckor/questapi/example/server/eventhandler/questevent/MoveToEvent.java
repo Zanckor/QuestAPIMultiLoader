@@ -7,11 +7,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Mathematic;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Mathematic;
 import net.zanckor.questapi.mod.common.network.handler.ServerHandler;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class MoveToEvent {
     public static void moveToQuest(TickEvent.PlayerTickEvent e) throws IOException {
         if (e.player == null || e.side.isClient() || e.player.getServer().getTickCount() % 20 != 0) return;
 
-        List<Path> moveToQuests = QuestDialogManager.getQuestTypeLocation(MOVE_TO);
+        List<Path> moveToQuests = QuestDialogManager.getQuestTypePathLocation(MOVE_TO);
 
         if (moveToQuests != null) {
             for (Path path : moveToQuests) {

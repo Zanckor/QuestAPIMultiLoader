@@ -14,12 +14,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.api.screenmanager.AbstractQuestLog;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.api.screen.AbstractQuestLog;
 import net.zanckor.questapi.example.client.screen.button.TextButton;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.handler.ClientHandler;
@@ -100,7 +100,6 @@ public class QuestLog extends AbstractQuestLog {
         int maxLength = 24 * 5;
 
         HashMap<Integer, Integer> displayedButton = new HashMap<>();
-
 
         //For each quest, checks if it can be added as a button to display data
         //Only add widget if there's 4 or fewer buttons added

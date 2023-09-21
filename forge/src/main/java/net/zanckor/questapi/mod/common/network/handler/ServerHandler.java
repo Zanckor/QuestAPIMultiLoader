@@ -6,16 +6,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.screenmanager.NpcType;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogOption;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.screen.NpcType;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.mod.common.util.MCUtil;
 
 import java.io.File;
@@ -36,12 +36,12 @@ public class ServerHandler {
     public static void addQuest(Player player, Enum optionType, int optionID) {
         String dialogGlobalID = QuestDialogManager.currentGlobalDialog.get(player);
 
-        Path path = QuestDialogManager.getDialogLocation(dialogGlobalID);
+        Path path = QuestDialogManager.getConversationPathLocation(dialogGlobalID);
         File dialogFile = path.toFile();
         AbstractDialogOption dialogTemplate = QuestTemplateRegistry.getDialogTemplate(optionType);
 
         try {
-            NPCConversation dialog = (NPCConversation) GsonManager.getJsonClass(dialogFile, NPCConversation.class);
+            Conversation dialog = (Conversation) GsonManager.getJsonClass(dialogFile, Conversation.class);
 
             dialogTemplate.handler(player, dialog, optionID, (Entity) null);
 
@@ -52,11 +52,11 @@ public class ServerHandler {
 
     public static void questHandler(Enum questType, ServerPlayer player, LivingEntity entity) throws IOException {
         AbstractGoal quest = QuestTemplateRegistry.getQuestTemplate(questType);
-        List<Path> questTypeLocation = QuestDialogManager.getQuestTypeLocation(questType);
+        List<Path> questTypeLocation = QuestDialogManager.getQuestTypePathLocation(questType);
 
         if (quest == null || questTypeLocation == null || questTypeLocation.isEmpty()) return;
 
-        List<Path> questTypeLocationCopy = new CopyOnWriteArrayList<>(QuestDialogManager.getQuestTypeLocation(questType));
+        List<Path> questTypeLocationCopy = new CopyOnWriteArrayList<>(QuestDialogManager.getQuestTypePathLocation(questType));
 
         for (Path path : questTypeLocationCopy) {
             File file = path.toAbsolutePath().toFile();
@@ -82,11 +82,11 @@ public class ServerHandler {
     public static void requestDialog(ServerPlayer player, int optionID, Enum optionType, UUID entityUUID, Item item, NpcType npcType) {
         String globalDialogID = QuestDialogManager.currentGlobalDialog.get(player);
 
-        Path path = QuestDialogManager.getDialogLocation(globalDialogID);
+        Path path = QuestDialogManager.getConversationPathLocation(globalDialogID);
         File dialogFile = path.toFile();
         AbstractDialogOption dialogTemplate = QuestTemplateRegistry.getDialogTemplate(optionType);
         try {
-            NPCConversation dialog = (NPCConversation) GsonManager.getJsonClass(dialogFile, NPCConversation.class);
+            Conversation dialog = (Conversation) GsonManager.getJsonClass(dialogFile, Conversation.class);
 
             switch (npcType) {
                 case ITEM -> dialogTemplate.handler(player, dialog, optionID, item);

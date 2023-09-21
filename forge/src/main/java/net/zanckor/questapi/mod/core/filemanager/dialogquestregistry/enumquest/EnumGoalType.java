@@ -1,9 +1,9 @@
 package net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest;
 
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractGoal;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.interfacemanager.enumquest.IEnumQuestGoal;
-import net.zanckor.questapi.api.interfacemanager.enumquest.IEnumTargetType;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractGoal;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.enuminterface.enumquest.IEnumQuestGoal;
+import net.zanckor.questapi.api.enuminterface.enumquest.IEnumTargetType;
 import net.zanckor.questapi.example.common.handler.questgoal.*;
 import net.zanckor.questapi.example.common.handler.targettype.EntityTargetType;
 import net.zanckor.questapi.example.common.handler.targettype.ItemTargetType;

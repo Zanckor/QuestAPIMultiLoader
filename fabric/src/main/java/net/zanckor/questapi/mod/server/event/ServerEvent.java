@@ -8,13 +8,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.npc.entity_type_tag.codec.EntityTypeTagDialog;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.npc.entity_type_tag.codec.EntityTypeTagDialog;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
 import net.zanckor.questapi.eventmanager.event.PlayerEvent;
@@ -137,7 +137,7 @@ public class ServerEvent {
 
         if (serverDialogs.toFile().listFiles() != null) {
             for (File file : serverDialogs.toFile().listFiles()) {
-                QuestDialogManager.registerDialogLocation(file.getName(), file.toPath().toAbsolutePath());
+                QuestDialogManager.registerConversationLocation(file.getName(), file.toPath().toAbsolutePath());
             }
         }
 
@@ -167,7 +167,7 @@ public class ServerEvent {
     public static void loadDialogPerEntityType(Player player, Entity entity, InteractionHand interactionHand) throws IOException {
         String targetEntityType = EntityType.getKey(entity.getType()).toString();
 
-        List<String> dialogPerEntityType = QuestDialogManager.getDialogPerEntityType(targetEntityType);
+        List<String> dialogPerEntityType = QuestDialogManager.getDialogPathByEntityType(targetEntityType);
 
         if (!player.level().isClientSide && dialogPerEntityType != null && interactionHand.equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
             String selectedDialog = ((IEntityData) entity).getPersistentData().getString("dialog");
@@ -191,7 +191,7 @@ public class ServerEvent {
 
         if (interactionHand.equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
 
-            for (Map.Entry<String, File> entry : QuestDialogManager.dialogPerCompoundTag.entrySet()) {
+            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByrCompoundTag.entrySet()) {
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(entity);
                 File value = entry.getValue();
                 EntityTypeTagDialog entityTypeDialog = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);

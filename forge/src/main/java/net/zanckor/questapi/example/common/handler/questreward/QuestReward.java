@@ -1,16 +1,16 @@
 package net.zanckor.questapi.example.common.handler.questreward;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractQuestRequirement;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractReward;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerRequirement;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
 
 import java.io.File;

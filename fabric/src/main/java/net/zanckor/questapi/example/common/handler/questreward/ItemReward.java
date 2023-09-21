@@ -5,8 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractReward;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
 
 import java.io.IOException;

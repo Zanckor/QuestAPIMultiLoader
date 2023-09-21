@@ -3,12 +3,12 @@ package net.zanckor.questapi.example.common.handler.dialogrequirement;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogRequirement;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogRequirement;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.dialog.codec.NPCDialog;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.util.GsonManager;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.dialogoption.DisplayDialog;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumdialog.EnumDialogReq;
@@ -36,7 +36,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
 
 // Handler method for player interactions with NPC conversations rendering an Entity
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, Entity entity) throws IOException {
         if (player.level().isClientSide) return false;
 
         // Get the requirement for the selected dialog option
@@ -47,7 +47,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
 
         // Get the requirement status and quest path
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
-        Path questPath = QuestDialogManager.getQuestByID(requirement.getQuestId());
+        Path questPath = QuestDialogManager.getQuestPathByID(requirement.getQuestId());
 
         //If questPath is null means player hasn't read any dialog, so if requirement status is NOT_OBTAINED always will be true
         if (questPath == null) {
@@ -99,7 +99,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
 
     // Handler method for player interactions with NPC conversations using a specific resource location for rendering an entity
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, String resourceLocation) throws IOException {
         if (player.level().isClientSide) return false;
 
         // Get the requirement for the selected dialog option
@@ -108,7 +108,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
         if (!(requirementType.equals(EnumDialogReq.QUEST.toString()))) return false;
 
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
-        Path questPath = QuestDialogManager.getQuestByID(requirement.getQuestId());
+        Path questPath = QuestDialogManager.getQuestPathByID(requirement.getQuestId());
 
         //If questPath is null means player hasn't read any dialog, so if requirement status is NOT_OBTAINED always will be true
         if (questPath == null) {
@@ -161,7 +161,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
 
     // Handler method for player interactions with NPC conversations using a specific resource location for rendering an item
     @Override
-    public boolean handler(Player player, NPCConversation dialog, int option_id, Item item) throws IOException {
+    public boolean handler(Player player, Conversation dialog, int option_id, Item item) throws IOException {
         if (player.level().isClientSide) return false;
 
         // Get the requirement for the selected dialog option
@@ -170,7 +170,7 @@ public class QuestRequirement extends AbstractDialogRequirement {
         if (!(requirementType.equals(EnumDialogReq.QUEST.toString()))) return false;
 
         EnumDialogReqStatus requirementStatus = EnumDialogReqStatus.valueOf(requirement.getRequirement_status());
-        Path questPath = QuestDialogManager.getQuestByID(requirement.getQuestId());
+        Path questPath = QuestDialogManager.getQuestPathByID(requirement.getQuestId());
 
         //If questPath is null means player hasn't read any dialog, so if requirement status is NOT_OBTAINED always will be true
         if (questPath == null) {
@@ -220,17 +220,17 @@ public class QuestRequirement extends AbstractDialogRequirement {
     }
 
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, Entity entity) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, Entity entity) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, entity));
     }
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, String resourceLocation) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, String resourceLocation) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, resourceLocation));
     }
 
-    private void displayDialog(Player player, int dialog_id, NPCConversation dialog, Item item) throws IOException {
+    private void displayDialog(Player player, int dialog_id, Conversation dialog, Item item) throws IOException {
         QuestDialogManager.currentDialog.put(player, dialog_id);
         SendQuestPacket.TO_CLIENT(player, new DisplayDialog(dialog, dialog.getIdentifier(), dialog_id, player, item));
     }

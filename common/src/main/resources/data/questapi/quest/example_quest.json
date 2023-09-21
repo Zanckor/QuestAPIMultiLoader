@@ -1,0 +1,57 @@
+{
+  "id": "example_quest",
+  "title": "quest_name.questapi.example_quest",
+  "hasTimeLimit": false,
+  "timeLimitInSeconds": 0,
+  "goals": [
+    {
+      "type": "COLLECT",
+      "target": "minecraft:iron_ingot",
+      "amount": 1
+    },
+    {
+      "type": "COLLECT_WITH_NBT",
+      "target": "minecraft:iron_ingot",
+      "amount": 1,
+      "additionalClassData": {
+        "display": "Iron"
+      }
+    },
+    {
+      "type": "MOVE_TO",
+      "target": "0 / 0 / 0",
+      "amount": 1,
+      "additionalListData": [0, 0, 0]
+    },
+    {
+      "type": "XP",
+      "target": "",
+      "amount": 1
+    },
+    {
+      "type": "KILL",
+      "target": "minecraft:pig",
+      "amount": 1
+    },
+    {
+      "type": "INTERACT_ENTITY",
+      "target": "minecraft:pig",
+      "amount": 1
+    }
+  ],
+  "rewards": [
+    {
+      "type": "ITEM",
+      "tag": "minecraft:coal",
+      "amount": 64
+    }
+  ],
+  "requirements": [
+    {
+      "type": "XP",
+      "requirements_min": 0,
+      "requirements_max": 10
+    }
+  ],
+  "description": "Description example"
+}

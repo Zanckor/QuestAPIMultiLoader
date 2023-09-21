@@ -1,6 +1,5 @@
 package net.zanckor.questapi.example.client.screen.hud;
 
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.ChatFormatting;
@@ -11,13 +10,13 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractTargetType;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.api.screenmanager.AbstractQuestTracked;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractTargetType;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.api.screen.AbstractQuestTracked;
+import net.zanckor.questapi.util.Util;
 import net.zanckor.questapi.mod.common.util.MCUtilClient;
 
 import java.util.ArrayList;

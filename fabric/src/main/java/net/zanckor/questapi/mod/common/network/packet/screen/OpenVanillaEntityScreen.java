@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.util.Util;
 import net.zanckor.questapi.mod.common.network.NetworkHandler;
 import net.zanckor.questapi.mod.common.network.packet.AbstractPacket;
 

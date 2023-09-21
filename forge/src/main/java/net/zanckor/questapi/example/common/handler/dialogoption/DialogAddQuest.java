@@ -5,19 +5,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.abstractdialog.AbstractDialogOption;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCConversation;
-import net.zanckor.questapi.api.filemanager.dialog.codec.NPCDialog;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.abstractdialog.AbstractDialogOption;
+import net.zanckor.questapi.api.file.dialog.codec.Conversation;
+import net.zanckor.questapi.api.file.dialog.codec.NPCDialog;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractQuestRequirement;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerRequirement;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
+import net.zanckor.questapi.util.Util;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.handler.ClientHandler;
 import net.zanckor.questapi.mod.common.network.packet.dialogoption.CloseDialog;
@@ -45,7 +45,7 @@ public class DialogAddQuest extends AbstractDialogOption {
      */
 
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, Entity entity) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, Entity entity) throws IOException {
         //Checks if the player has the requirements
         int currentDialog = QuestDialogManager.currentDialog.get(player);
         NPCDialog.DialogOption option = dialog.getDialog().get(currentDialog).getOptions().get(option_id);
@@ -99,12 +99,12 @@ public class DialogAddQuest extends AbstractDialogOption {
 
     //Since the dialog is closed once the player clicks on this option, both methods call the first one. We don't need RL or Item
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, String resourceLocation) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, String resourceLocation) throws IOException {
         handler(player, dialog, option_id, (Entity) null);
     }
 
     @Override
-    public void handler(Player player, NPCConversation dialog, int option_id, Item item) throws IOException {
+    public void handler(Player player, Conversation dialog, int option_id, Item item) throws IOException {
         handler(player, dialog, option_id, (Entity) null);
     }
 }

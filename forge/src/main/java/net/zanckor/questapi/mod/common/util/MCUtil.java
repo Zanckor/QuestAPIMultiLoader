@@ -14,16 +14,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.common.Mod;
 import net.zanckor.questapi.CommonMain;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.dialog.codec.ReadDialog;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.dialog.codec.ReadConversation;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractQuestRequirement;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerRequirement;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Util;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
 
@@ -146,55 +146,35 @@ public class MCUtil {
     }
 
 
-    public static void writeDialogRead(Player player, int dialogID) throws IOException {
-        String globalDialog = QuestDialogManager.currentGlobalDialog.get(player);
 
-
+    @SuppressWarnings("all")
+    public static void writeDialogRead(Player player, String conversationID, int dialogID) throws IOException {
+        // Get the user folder for the player
         Path userFolder = Paths.get(CommonMain.playerData.toString(), player.getUUID().toString());
 
-        Path path = Paths.get(CommonMain.getReadDialogs(userFolder).toString(), File.separator, "dialog_read.json");
-        File file = path.toFile();
+        // Get the path for the read dialog file
+        Path readDialogPath = Paths.get(CommonMain.getReadDialogs(userFolder).toString(), File.separator, "dialog_read.json");
+        File readDialogFile = readDialogPath.toFile();
 
-        ReadDialog.GlobalID dialog = file.exists() ? (ReadDialog.GlobalID) GsonManager.getJsonClass(file, ReadDialog.GlobalID.class) : null;
+        // Deserialize the readConversation and conversation from JSON files
+        ReadConversation readConversation = readDialogFile.exists() ? (ReadConversation) GsonManager.getJsonClass(readDialogFile, ReadConversation.class) : new ReadConversation();
+        readConversation.getConversation(conversationID).add(dialogID);
 
-        List<ReadDialog.DialogID> dialogIDList;
-        if (dialog == null) {
-            dialogIDList = new ArrayList<>();
-        } else {
-            dialogIDList = dialog.getDialog_id();
-
-            for (ReadDialog.DialogID id : dialogIDList) {
-                if (id.getDialog_id() == dialogID) {
-                    return;
-                }
-            }
-        }
-
-        dialogIDList.add(new ReadDialog.DialogID(dialogID));
-        ReadDialog.GlobalID globalIDClass = new ReadDialog.GlobalID(globalDialog, dialogIDList);
-
-        GsonManager.writeJson(file, globalIDClass);
+        GsonManager.writeJson(readDialogFile, readConversation);
     }
 
-    public static boolean isReadDialog(Player player, int dialogID) throws IOException {
+    public static boolean isReadDialog(Player player, String conversationID, int dialogID) throws IOException {
+        // Get the user folder for the player
         Path userFolder = Paths.get(CommonMain.playerData.toString(), player.getUUID().toString());
 
-        Path path = Paths.get(CommonMain.getReadDialogs(userFolder).toString(), File.separator, "dialog_read.json");
-        File file = path.toFile();
-        ReadDialog.GlobalID dialog = file.exists() ? (ReadDialog.GlobalID) GsonManager.getJsonClass(file, ReadDialog.GlobalID.class) : null;
-        List<ReadDialog.DialogID> dialogIDList;
+        // Get the path for the read dialog file
+        Path readDialogPath = Paths.get(CommonMain.getReadDialogs(userFolder).toString(), File.separator, "dialog_read.json");
+        File readDialogFile = readDialogPath.toFile();
 
-        if (dialog != null) {
-            dialogIDList = dialog.getDialog_id();
+        // Deserialize the readConversation and conversation from JSON files
+        ReadConversation readConversation = readDialogFile.exists() ? (ReadConversation) GsonManager.getJsonClass(readDialogFile, ReadConversation.class) : null;
 
-            for (ReadDialog.DialogID id : dialogIDList) {
-                if (id.getDialog_id() == dialogID) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return readConversation.getConversation(conversationID).contains(dialogID);
     }
 
 

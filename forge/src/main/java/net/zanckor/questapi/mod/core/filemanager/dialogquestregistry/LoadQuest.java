@@ -5,8 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.storage.LevelResource;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.util.GsonManager;
 import net.zanckor.questapi.mod.common.datapack.QuestJSONListener;
 
 import java.io.*;
@@ -77,8 +77,9 @@ public class LoadQuest {
         try {
             if (serverQuest == null) return;
 
-            File file = new File(serverQuests.toFile(), identifier + "." + fileName);
             serverQuest.setId(identifier + "." + fileName.substring(0, fileName.length() - 5));
+            File file = new File(serverQuests.toFile(), identifier + "." + fileName);
+
             GsonManager.writeJson(file, serverQuest);
         } catch (IOException e) {
             throw new RuntimeException(e);

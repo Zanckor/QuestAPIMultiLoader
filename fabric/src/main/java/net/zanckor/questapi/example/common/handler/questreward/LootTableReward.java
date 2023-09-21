@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractReward;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractReward;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
 import net.zanckor.questapi.mod.core.filemanager.dialogquestregistry.enumquest.EnumQuestReward;
 
 import java.io.IOException;

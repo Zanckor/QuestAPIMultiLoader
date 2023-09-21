@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
-import net.zanckor.questapi.commonutil.Util;
+import net.zanckor.questapi.util.Util;
 
 import java.io.IOException;
 import java.util.UUID;

@@ -8,16 +8,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.zanckor.questapi.api.datamanager.QuestDialogManager;
-import net.zanckor.questapi.api.filemanager.quest.abstracquest.AbstractQuestRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerQuest;
-import net.zanckor.questapi.api.filemanager.quest.codec.server.ServerRequirement;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserGoal;
-import net.zanckor.questapi.api.filemanager.quest.codec.user.UserQuest;
-import net.zanckor.questapi.api.filemanager.quest.register.QuestTemplateRegistry;
-import net.zanckor.questapi.api.registrymanager.EnumRegistry;
-import net.zanckor.questapi.commonutil.GsonManager;
-import net.zanckor.questapi.commonutil.Timer;
+import net.zanckor.questapi.api.data.QuestDialogManager;
+import net.zanckor.questapi.api.file.quest.abstracquest.AbstractQuestRequirement;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerQuest;
+import net.zanckor.questapi.api.file.quest.codec.server.ServerRequirement;
+import net.zanckor.questapi.api.file.quest.codec.user.UserGoal;
+import net.zanckor.questapi.api.file.quest.codec.user.UserQuest;
+import net.zanckor.questapi.api.file.quest.register.QuestTemplateRegistry;
+import net.zanckor.questapi.api.registry.EnumRegistry;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import net.zanckor.questapi.mod.common.network.SendQuestPacket;
 import net.zanckor.questapi.mod.common.network.packet.quest.ActiveQuestList;
 import net.zanckor.questapi.mod.common.network.packet.screen.RemovedQuest;
@@ -93,7 +93,7 @@ public class QuestCommand {
         ServerLevel level = context.getSource().getPlayer().serverLevel();
         Player player = level.getPlayerByUUID(playerUUID);
 
-        Path path = QuestDialogManager.getQuestByID(questID);
+        Path path = QuestDialogManager.getQuestPathByID(questID);
 
         UserQuest userQuest = (UserQuest) GsonManager.getJsonClass(path.toFile(), UserQuest.class);
 

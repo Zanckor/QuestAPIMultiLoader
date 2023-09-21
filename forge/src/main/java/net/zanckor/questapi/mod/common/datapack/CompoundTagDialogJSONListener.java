@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.zanckor.questapi.commonutil.GsonManager;
+import net.zanckor.questapi.util.GsonManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
