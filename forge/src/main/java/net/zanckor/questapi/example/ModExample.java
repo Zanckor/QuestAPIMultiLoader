@@ -40,7 +40,6 @@ public class ModExample {
     /**
      * You can create your own EnumClass to add your templates:
      * <p><p>
-     * <p>
      * DialogOption Needs to extend {@link AbstractDialogOption} <p>
      * Goal Needs to extend {@link AbstractGoal} <p>
      * Reward Needs to extend {@link AbstractReward} <p>
@@ -69,7 +68,6 @@ public class ModExample {
         LoadDialog.registerDialog(e.getServer(), MOD_ID);
         LoadDialogList.registerNPCDialogList(e.getServer(), MOD_ID);
         LoadTagDialogList.registerNPCTagDialogList(e.getServer(), MOD_ID);
-
 
         //Do not mind bout this, is background logic for data-packs.
         LoadQuest.registerDatapackQuest(e.getServer());

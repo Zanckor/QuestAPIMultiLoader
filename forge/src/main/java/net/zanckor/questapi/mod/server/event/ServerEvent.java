@@ -176,7 +176,7 @@ public class ServerEvent {
         String targetEntityType = EntityType.getKey(target.getType()).toString();
 
         // Get the list of dialogs associated with the entity type
-        List<String> dialogPerEntityType = QuestDialogManager.getDialogPathByEntityType(targetEntityType);
+        List<String> dialogPerEntityType = QuestDialogManager.getConversationByEntityType(targetEntityType);
 
         // Check if the player has interacted with an entity that has a dialog
         // Show the first dialog if available, or open the menu of the entity
@@ -211,17 +211,24 @@ public class ServerEvent {
         Entity target = e.getTarget();
         List<String> dialogList = new ArrayList<>();
 
-        //If player has interacted with an entity that has an dialog, show the first, else open the menu of the entity (If has)
+        //If player has interacted with an entity that has an dialog, show the first, else open the menu of the entity (If it has)
         if (!player.level().isClientSide && e.getHand().equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
 
-            //Checks all conditions for each conversation to check if entity has the tags for display a conversation
-            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByrCompoundTag.entrySet()) {
+            // Get the list of dialogs associated with the entity type, and check if the entity has the tags
+            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByCompoundTag.entrySet()) {
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(target);
                 File value = entry.getValue();
-                EntityTypeTagDialog entityTypeDialog = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);
+                String targetEntityType = EntityType.getKey(target.getType()).toString();
 
+                // Get the list of dialogs associated with the entity type
+                EntityTypeTagDialog entityTypeConversation = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);
+                boolean isEntityType = entityTypeConversation.getEntity_type().contains(targetEntityType);
+
+                if (!isEntityType) continue;
+
+                // If the entity has the tags, add the conversation to the list
                 conditions:
-                for (EntityTypeTagDialog.EntityTypeTagDialogCondition conditions : entityTypeDialog.getConditions()) {
+                for (EntityTypeTagDialog.EntityTypeTagDialogCondition conditions : entityTypeConversation.getConditions()) {
                     boolean tagCompare;
 
                     switch (conditions.getLogic_gate()) {
@@ -233,6 +240,7 @@ public class ServerEvent {
                                     continue;
                                 }
 
+                                // If the entity has the tag, add the conversation to the list
                                 tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
 
                                 if (tagCompare) {
@@ -243,12 +251,14 @@ public class ServerEvent {
                             }
                         }
 
-                        //If all conditions are true, can start the conversation
+                        // If all conditions are true, can start the conversation
                         case AND -> {
                             boolean shouldAddDialogList = false;
 
+                            // If the entity has the tags, add the conversation to the list
                             for (EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
 
+                                // If the entity doesn't have the tag, skip it
                                 if (entityNBT.get(nbt.getTag()) != null) {
                                     tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
                                 } else {
@@ -260,15 +270,16 @@ public class ServerEvent {
                                 if (!tagCompare) break;
                             }
 
+                            // If the entity has all the tags, add the conversation to the list
                             if (shouldAddDialogList) {
                                 dialogList.addAll(conditions.getDialog_list());
                             }
-
                         }
                     }
                 }
             }
 
+            // If the entity has dialogs, load the first one
             if (!dialogList.isEmpty()) {
                 e.setCanceled(true);
 
@@ -287,11 +298,12 @@ public class ServerEvent {
                             }
                         }
 
-
+                        // If the entity has no unread conversations, display the first one
                         target.getPersistentData().putString("dialog", selectedDialog);
                     }
                 }
 
+                // Load the selected dialog for the player and the target entity
                 StartDialog.loadDialog(player, selectedDialog, target);
             }
         }

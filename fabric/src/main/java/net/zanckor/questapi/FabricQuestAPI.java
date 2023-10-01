@@ -21,7 +21,7 @@ public class FabricQuestAPI implements ModInitializer {
         registerNetwork();
         registerConfig();
         //registerResourceListener();
-        callBackEvent();
+        registerCallback();
     }
 
     private void registerConfig() {
@@ -40,7 +40,7 @@ public class FabricQuestAPI implements ModInitializer {
         new QuestJSONListener().register();
     }
 
-    private void callBackEvent() {
+    private void registerCallback() {
         EventManager.registerClass();
 
         EventManager.serverPlayerEvent();

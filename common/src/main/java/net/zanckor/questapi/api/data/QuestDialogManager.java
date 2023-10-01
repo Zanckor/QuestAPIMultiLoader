@@ -57,14 +57,14 @@ public class QuestDialogManager {
     public static HashMap<Enum<?>, List<Path>> clientQuestTypeLocation = new HashMap<>();
     public static HashMap<String, Path> conversationLocation = new HashMap<>();
     public static HashMap<String, List<String>> conversationByEntityType = new HashMap<>();
-    public static HashMap<String, File> conversationByrCompoundTag = new HashMap<>();
+    public static HashMap<String, File> conversationByCompoundTag = new HashMap<>();
 
     public static HashMap<String, Conversation> conversationByID = new HashMap<>();
 
 
     public static void registerDialogByCompoundTag() {
         for (File file : CommonMain.compoundTag_List.toFile().listFiles()) {
-            conversationByrCompoundTag.put(file.getName(), file);
+            conversationByCompoundTag.put(file.getName(), file);
         }
     }
 
@@ -114,12 +114,12 @@ public class QuestDialogManager {
 
     @SuppressWarnings("unused")
     public static File getDialogPathByCompoundTag(String compoundTag) {
-        if (!conversationByrCompoundTag.containsKey(compoundTag)) return null;
+        if (!conversationByCompoundTag.containsKey(compoundTag)) return null;
 
-        return conversationByrCompoundTag.get(compoundTag);
+        return conversationByCompoundTag.get(compoundTag);
     }
 
-    public static List<String> getDialogPathByEntityType(String entityType) {
+    public static List<String> getConversationByEntityType(String entityType) {
         if (!conversationByEntityType.containsKey(entityType)) return null;
 
         return conversationByEntityType.get(entityType);

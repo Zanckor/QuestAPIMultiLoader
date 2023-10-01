@@ -94,7 +94,7 @@ public class MinimalistDialogScreen extends AbstractDialog {
         yScreenPos = (double) width / 3;
         scale = ((float) width) / 700;
 
-        xButtonPosition = (int) (xScreenPos - (imageWidth / 2.75));
+        xButtonPosition = (int) (xScreenPos - (imageWidth / 3));
         yButtonPosition = (int) (yScreenPos * 1.225);
 
         for (int i = 0; i < optionSize; i++) {
@@ -102,17 +102,17 @@ public class MinimalistDialogScreen extends AbstractDialog {
             int index = i;
 
             if (xButtonPosition + stringLength > (width / 1.3)) {
-                yButtonPosition += 18 * scale;
+                yButtonPosition += 20 * scale;
                 xButtonPosition = (int) (xScreenPos - (imageWidth / 2.75));
             }
 
-            addRenderableWidget(new TextButton(xButtonPosition, yButtonPosition, stringLength, 20, ((float) width) / 675,
+            addRenderableWidget(new TextButton(xButtonPosition, yButtonPosition, stringLength, 20, ((float) width) / 800,
                     Component.literal(I18n.get(optionStrings.get(i).get(0))).withStyle(ChatFormatting.WHITE), 26, button -> button(index)));
 
-            xButtonPosition += (stringLength);
+            xButtonPosition += (stringLength + 25) * scale;
         }
 
-        addRenderableWidget(new TextButton((int) (imageWidth * 1.4), (int) (imageHeight * 1.1), 20, 20, ((float) width) / 300,
+        addRenderableWidget(new TextButton((int) (imageWidth * 1.4), (int) (imageHeight * 1.1), 20, 20, ((float) width) / 675,
                 Component.literal("↩"), 26, button -> {
             if (npcUUID != null) SendQuestPacket.TO_SERVER(new OpenVanillaEntityScreen(npcUUID));
         }));

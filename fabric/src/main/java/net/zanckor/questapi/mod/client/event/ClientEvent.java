@@ -15,16 +15,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.zanckor.questapi.api.file.npc.entity_type_tag.codec.EntityTypeTagDialog;
-import net.zanckor.questapi.api.screen.AbstractQuestLog;
 import net.zanckor.questapi.api.registry.ScreenRegistry;
-import net.zanckor.questapi.util.GsonManager;
-import net.zanckor.questapi.util.Timer;
+import net.zanckor.questapi.api.screen.AbstractQuestLog;
 import net.zanckor.questapi.eventmanager.annotation.EventSubscriber;
 import net.zanckor.questapi.eventmanager.annotation.SubscribeEvent;
 import net.zanckor.questapi.eventmanager.event.RenderLivingEvent;
 import net.zanckor.questapi.mod.common.config.client.RendererConfig;
 import net.zanckor.questapi.mod.common.network.handler.NetworkClientHandler;
 import net.zanckor.questapi.mod.core.data.IEntityData;
+import net.zanckor.questapi.util.GsonManager;
+import net.zanckor.questapi.util.Timer;
 import org.joml.Quaternionf;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class ClientEvent {
     @SuppressWarnings("ConstantConditions")
     @SubscribeEvent(event = RenderLivingEvent.AfterRenderLivingEntity.class)
     public static void renderNPCQuestMarker(Entity entity, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
-        if(!(entity instanceof LivingEntity)) return;
+        if (!(entity instanceof LivingEntity)) return;
 
         Player player = Minecraft.getInstance().player;
         Font font = Minecraft.getInstance().font;
@@ -92,6 +92,7 @@ public class ClientEvent {
     public static boolean checkEntityTypeIsValid(LivingEntity entity) {
         EntityType<?> entityType = entity.getType();
         CompoundTag tag = ((IEntityData) entity).getPersistentData();
+
         if (tag.getBoolean("beingRenderedOnInventory")) return false;
 
         if (tag.contains("availableForDialog")) {
@@ -112,57 +113,80 @@ public class ClientEvent {
     public static boolean checkEntityTagIsValid(LivingEntity entity) {
         CompoundTag tag = ((IEntityData) entity).getPersistentData();
 
+        // Check if the entity has the tag that is available for the dialog
         for (Map.Entry<String, String> entry : NetworkClientHandler.availableEntityTagForQuest.entrySet()) {
             if (Timer.canUseWithCooldown(entity.getUUID(), "UPDATE_MARKER", Float.parseFloat(RendererConfig.QUEST_MARK_UPDATE_COOLDOWN))) {
                 Timer.updateCooldown(entity.getUUID(), "UPDATE_MARKER", Float.parseFloat(RendererConfig.QUEST_MARK_UPDATE_COOLDOWN));
 
+                // Get the entity's NBT
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(entity);
                 String value = entry.getValue();
+                String targetEntityType = EntityType.getKey(entity.getType()).toString();
 
+                // Get the list of dialogs associated with the entity type
                 EntityTypeTagDialog entityTypeDialog = GsonManager.gson.fromJson(value, EntityTypeTagDialog.class);
 
+                // Get the list of dialogs associated with the entity type, and check if the entity has the tags
                 for (EntityTypeTagDialog.EntityTypeTagDialogCondition conditions : entityTypeDialog.getConditions()) {
                     boolean tagCompare;
+                    boolean shouldAddMarker;
 
-                    switch (conditions.getLogic_gate()) {
-                        case OR -> {
-                            for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
-                                if (entityNBT.get(nbt.getTag()) == null) {
-                                    continue;
-                                }
+                    try {
 
-                                tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
-
-                                tag.putBoolean("availableForDialog", tagCompare);
-                                if (tagCompare) return true;
-                            }
+                        EntityTypeTagDialog entityTypeConversation = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);
+                        boolean isEntityType = entityTypeConversation.getEntity_type().contains(targetEntityType);
+                        if (!isEntityType) {
+                            shouldAddMarker = false;
+                            continue;
                         }
-                        case AND -> {
-                            boolean shouldAddMarker = false;
 
-                            for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
+                        switch (conditions.getLogic_gate()) {
+                            // If the logic gate is OR, then if the entity has one of the tags, then it is available for the dialog
+                            case OR -> {
+                                for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
+                                    if (entityNBT.get(nbt.getTag()) == null) {
+                                        continue;
+                                    }
 
-                                if (entityNBT.get(nbt.getTag()) != null) {
                                     tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
-                                } else {
-                                    tagCompare = false;
+
+                                    tag.putBoolean("availableForDialog", tagCompare);
+                                    if (tagCompare) return true;
+                                }
+                            }
+
+                            // If the logic gate is AND, then if the entity has all the tags, then it is available for the dialog
+                            case AND -> {
+                                shouldAddMarker = false;
+
+                                for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
+
+                                    if (entityNBT.get(nbt.getTag()) != null) {
+                                        tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
+                                    } else {
+                                        tagCompare = false;
+                                    }
+
+                                    shouldAddMarker = tagCompare;
+
+                                    if (!tagCompare) break;
                                 }
 
-                                shouldAddMarker = tagCompare;
+                                tag.putBoolean("availableForDialog", shouldAddMarker);
+                                if (shouldAddMarker) {
+                                    return true;
+                                }
 
-                                if (!tagCompare) break;
                             }
-
-                            tag.putBoolean("availableForDialog", shouldAddMarker);
-                            if (shouldAddMarker) {
-                                return true;
-                            }
-
                         }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
 
+            // If the entity has the tag, then it is available for the dialog
             if (tag.getBoolean("beingRenderedOnInventory")) return false;
 
             if (tag.contains("availableForDialog")) {

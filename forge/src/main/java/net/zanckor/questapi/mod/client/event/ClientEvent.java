@@ -105,53 +105,71 @@ public class ClientEvent {
             if (Timer.canUseWithCooldown(entity.getUUID(), "UPDATE_MARKER", RendererConfig.QUEST_MARK_UPDATE_COOLDOWN.get())) {
                 Timer.updateCooldown(entity.getUUID(), "UPDATE_MARKER", RendererConfig.QUEST_MARK_UPDATE_COOLDOWN.get());
 
+                // Get the entity's NBT
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(entity);
                 String value = entry.getValue();
+                String targetEntityType = EntityType.getKey(entity.getType()).toString();
 
+                // Get the list of dialogs associated with the entity type
                 EntityTypeTagDialog entityTypeDialog = GsonManager.gson.fromJson(value, EntityTypeTagDialog.class);
 
+                // Get the list of dialogs associated with the entity type, and check if the entity has the tags
                 for (EntityTypeTagDialog.EntityTypeTagDialogCondition conditions : entityTypeDialog.getConditions()) {
                     boolean tagCompare;
 
-                    switch (conditions.getLogic_gate()) {
-                        case OR -> {
-                            for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
-                                if (entityNBT.get(nbt.getTag()) == null) {
-                                    continue;
-                                }
+                    try {
 
-                                tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
+                        EntityTypeTagDialog entityTypeConversation = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);
+                        boolean isEntityType = entityTypeConversation.getEntity_type().contains(targetEntityType);
+                        if (!isEntityType) continue;
 
-                                entity.getPersistentData().putBoolean("availableForDialog", tagCompare);
-                                if (tagCompare) return true;
-                            }
-                        }
-                        case AND -> {
-                            boolean shouldAddMarker = false;
+                        switch (conditions.getLogic_gate()) {
+                            // If the logic gate is OR, then if the entity has one of the tags, then it is available for the dialog
+                            case OR -> {
+                                for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
+                                    if (entityNBT.get(nbt.getTag()) == null) {
+                                        continue;
+                                    }
 
-                            for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
-
-                                if (entityNBT.get(nbt.getTag()) != null) {
                                     tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
-                                } else {
-                                    tagCompare = false;
+
+                                    entity.getPersistentData().putBoolean("availableForDialog", tagCompare);
+                                    if (tagCompare) return true;
+                                }
+                            }
+
+                            // If the logic gate is AND, then if the entity has all the tags, then it is available for the dialog
+                            case AND -> {
+                                boolean shouldAddMarker = false;
+
+                                for (EntityTypeTagDialog.EntityTypeTagDialogCondition.EntityTypeTagDialogNBT nbt : conditions.getNbt()) {
+
+                                    if (entityNBT.get(nbt.getTag()) != null) {
+                                        tagCompare = entityNBT.get(nbt.getTag()).getAsString().contains(nbt.getValue());
+                                    } else {
+                                        tagCompare = false;
+                                    }
+
+                                    shouldAddMarker = tagCompare;
+
+                                    if (!tagCompare) break;
                                 }
 
-                                shouldAddMarker = tagCompare;
+                                entity.getPersistentData().putBoolean("availableForDialog", shouldAddMarker);
+                                if (shouldAddMarker) {
+                                    return true;
+                                }
 
-                                if (!tagCompare) break;
                             }
-
-                            entity.getPersistentData().putBoolean("availableForDialog", shouldAddMarker);
-                            if (shouldAddMarker) {
-                                return true;
-                            }
-
                         }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
 
+            // If the entity has the tag, then it is available for the dialog
             if (entity.getPersistentData().getBoolean("beingRenderedOnInventory")) return false;
 
             if (entity.getPersistentData().contains("availableForDialog")) {

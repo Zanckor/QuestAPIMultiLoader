@@ -92,28 +92,27 @@ public class DialogScreen extends AbstractDialog {
         imageHeight = (int) (width / 2.7);
         xScreenPos = width - (imageWidth);
         yScreenPos = (double) width / 11;
-        scale = ((float) width) / 700;
+        scale = ((float) width) / 675;
 
         xButtonPosition = (int) (width / 3.55);
         yButtonPosition = (int) (yScreenPos * 3.6);
 
         for (int i = 0; i < optionSize; i++) {
-            int stringLength = (int) ((optionStrings.get(i).get(0).length() + 1) * 5.5);
+            int stringLength = (optionStrings.get(i).get(0).length() + 1) * 5;
             int index = i;
-
 
             if (xButtonPosition + stringLength > (width / 1.4)) {
                 xButtonPosition = (int) (width / 3.55);
-                yButtonPosition += 22 * scale;
+                yButtonPosition += 20 * scale;
             }
 
-            addRenderableWidget(new TextButton(xButtonPosition, yButtonPosition, (int) (stringLength * scale), 20, ((float) width) / 675,
+            addRenderableWidget(new TextButton(xButtonPosition, yButtonPosition, (int) (stringLength * scale), 20, ((float) width) / 700,
                     Component.literal(I18n.get(optionStrings.get(i).get(0))), 26, button -> button(index)));
 
-            xButtonPosition += optionStrings.get(i).get(0).length() * 5.7 * scale;
+            xButtonPosition += optionStrings.get(i).get(0).length() * 5.5 * scale;
         }
 
-        addRenderableWidget(new TextButton((int) (imageWidth * 1.4), (int) (imageHeight * 1.1), 20, 20, ((float) width) / 300,
+        addRenderableWidget(new TextButton((int) (imageWidth * 1.4), (int) (imageHeight * 1.1), 20, 20, ((float) width) / 675,
                 Component.literal("↩"), 26, button -> {
             if (npcUUID != null) SendQuestPacket.TO_SERVER(new OpenVanillaEntityScreen(npcUUID));
         }));

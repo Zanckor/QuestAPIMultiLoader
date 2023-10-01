@@ -167,7 +167,7 @@ public class ServerEvent {
     public static void loadDialogPerEntityType(Player player, Entity entity, InteractionHand interactionHand) throws IOException {
         String targetEntityType = EntityType.getKey(entity.getType()).toString();
 
-        List<String> dialogPerEntityType = QuestDialogManager.getDialogPathByEntityType(targetEntityType);
+        List<String> dialogPerEntityType = QuestDialogManager.getConversationByEntityType(targetEntityType);
 
         if (!player.level().isClientSide && dialogPerEntityType != null && interactionHand.equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
             String selectedDialog = ((IEntityData) entity).getPersistentData().getString("dialog");
@@ -191,7 +191,7 @@ public class ServerEvent {
 
         if (interactionHand.equals(InteractionHand.MAIN_HAND) && openVanillaMenu(player)) {
 
-            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByrCompoundTag.entrySet()) {
+            for (Map.Entry<String, File> entry : QuestDialogManager.conversationByCompoundTag.entrySet()) {
                 CompoundTag entityNBT = NbtPredicate.getEntityTagToCompare(entity);
                 File value = entry.getValue();
                 EntityTypeTagDialog entityTypeDialog = (EntityTypeTagDialog) GsonManager.getJsonClass(value, EntityTypeTagDialog.class);

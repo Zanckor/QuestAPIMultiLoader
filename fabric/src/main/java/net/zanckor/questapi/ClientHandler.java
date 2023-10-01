@@ -2,8 +2,6 @@ package net.zanckor.questapi;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.zanckor.questapi.eventmanager.EventManager;
@@ -20,14 +18,15 @@ public class ClientHandler implements ClientModInitializer {
     public void onInitializeClient() {
         registerNetwork();
         ClientHandler.keyInit();
-        callBackEvent();
+        registerCallback();
 
         new ClientModSetup();
     }
 
 
-    private void callBackEvent() {
+    private void registerCallback() {
         EventManager.registerClass();
+
         EventManager.clientTickEvent();
         EventManager.clientPlayerEvent();
         EventManager.renderHUDEvent();

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static net.zanckor.questapi.api.data.QuestDialogManager.conversationByrCompoundTag;
+import static net.zanckor.questapi.api.data.QuestDialogManager.conversationByCompoundTag;
 import static net.zanckor.questapi.api.data.QuestDialogManager.conversationByEntityType;
 
 @Environment(EnvType.CLIENT)
@@ -36,8 +36,8 @@ public class ValidNPCMarker extends AbstractPacket {
             //Convert String - File to String - String
             HashMap<String, String> entityTagMap = new HashMap<>();
 
-            for (String key : conversationByrCompoundTag.keySet()) {
-                String fileContent = Files.readString(conversationByrCompoundTag.get(key).toPath());
+            for (String key : conversationByCompoundTag.keySet()) {
+                String fileContent = Files.readString(conversationByCompoundTag.get(key).toPath());
 
                 entityTagMap.put(key, fileContent);
             }
